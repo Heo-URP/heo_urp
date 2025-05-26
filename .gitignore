@@ -1,4 +1,5 @@
 .DS_Store
+benchmark/data/
 VG_100K_2
 test_images
 test_images2
