@@ -1,5 +1,4 @@
 .DS_Store
-benchmark/data/
 VG_100K_2
 test_images
 test_images2
@@ -151,4 +150,3 @@ grounding/version.py
 vis/
 tmp/
 groundingdino/weights/groundingdino_swint_ogc.pth
-data/
