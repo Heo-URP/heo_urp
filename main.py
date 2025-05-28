@@ -327,7 +327,6 @@ def get_grounding_box(source_sentence, image_path, output_dir, box_threshold,
     image_with_box  , _ , final_boxes= plot_boxes_to_image(image, pred_dict)
     image_with_box.save(os.path.join(output_dir, "pred.jpg"))
     
-    final_boxes = final_boxes.tolist().append([0,0,1,1])
     return final_boxes
 
 
@@ -442,6 +441,7 @@ while attempt_count < RETRY_LIMIT:
     attempt_count =1000
 
     bbox = get_grounding_box(source_sentence, image_path, output_dir, box_threshold=0.3).tolist()
+    bbox.append([0,0,1,1])
     main(source_sentence, target_sentence,image_path,num_iters = 500,beta = beta, 
         bbox = bbox, output_dir=output_dir,cutloss_flag = preserve_form)
     
