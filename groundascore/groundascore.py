@@ -16,7 +16,6 @@
 from typing import Tuple, Union, Optional, List
 
 import torch
-from torchvision import transforms
 import torch.nn as nn
 from torch.optim.adamw import AdamW
 from torch.optim.sgd import SGD
@@ -382,12 +381,7 @@ def main(source_sentence, target_sentence, image_path,output_dir = "output/1111"
          masked_DDS = True, beta = [0.5,0.4,0.3,0.2,0.1],grounding_sentences = None,
         bbox = None, cutloss_flag = None, edit_intensities = None,reweight_flags=None):
 
-    transform = transforms.Compose([
-    transforms.ToTensor(),
-    transforms.Normalize(mean=[0.5, 0.5, 0.5],
-                        std =[0.5, 0.5, 0.5])
-    ])
-    image = transform(load_512(image_path))
+    image = load_512(image_path)
 
     timezone = pytz.timezone('Asia/Seoul')#type_your_timezone
     now = datetime.now(timezone)

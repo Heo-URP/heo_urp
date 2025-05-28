@@ -5,10 +5,10 @@ import requests
 from openai import OpenAI
 import os
 from dotenv import load_dotenv
+import traceback
 
 from transformers import AutoProcessor, AutoModel
 import torch
-from torchvision import transforms
 
 import re
 from datetime import datetime
@@ -225,13 +225,7 @@ def get_grounding_box(source_sentence, image_path, output_dir, box_threshold,
     processor = AutoProcessor.from_pretrained(model_id)
     model = AutoModel.from_pretrained(model_id).to(device)
 
-    transform = transforms.Compose([
-        # transforms.Resize((512, 512)),
-        transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                            std =[0.229, 0.224, 0.225])
-    ])
-    image = transform(Image.open(image_path).convert("RGB"))
+    image = Image.open(image_path).convert("RGB")
 
     text = grounding_sentences[-1]
     text = text.lower()
@@ -259,27 +253,33 @@ def get_grounding_box(source_sentence, image_path, output_dir, box_threshold,
         modified_positive_maps = positive_maps.clone()
         for _, phrase_indices in overlap.items():
             phrase_indices = list(phrase_indices)
-            bbox_k = int(round(alpha * len(phrase_indices)))  # 후보군 개수 alpha로 조정 가능
-            selected_logits = logits_for_phrases[phrase_indices]  # (len(phrase_indices), nq)
-            # mean_logits = selected_logits.mean(dim=0) # 평균값 기준 (nq,)
-            topk_indices = torch.topk(selected_logits, bbox_k).indices # 각 group 별 bbox 후보 index
+            phrase_indices_tensor = torch.tensor(phrase_indices)  # (n,)
 
-            # 후보 bbox들에 대해서 공통으로 연관이 가장 높은 tok_k개의 token index 추출
-            top_logits = logits[topk_indices] #(candidate_boxes, token_labels) 
-            hist = torch.topk(top_logits, k=beta, dim=1).indices  # token_idx
-            hist = hist.flatten()  
-            counts = torch.bincount(hist, minlength=top_logits.shape[1])
-            top_tok_idx = torch.topk(counts, k=tok_k).indices 
+            bbox_k = int(round(alpha * len(phrase_indices)))  # 후보 box 개수 - alpha로 조정 
+            selected_logits_for_phrases = logits_for_phrases[phrase_indices]  # (len(phrase_indices), nq)
+            top_box_idx = torch.topk(selected_logits_for_phrases, bbox_k).indices # 각 group 별 bbox 후보 index (len(phrase_indices), bbox_k)
+
+            tok_idx = torch.argmax(logits[top_box_idx.flatten()], dim=1)  
+            acc_tok_logit = torch.bincount(tok_idx, minlength=logits.shape[-1])  # (256,)
+            top_tok_idx_tensor = torch.topk(acc_tok_logit, k=tok_k).indices  # shape: (tok_k,)
 
             # 추출한 token index에 대한 positive map 값 gamma배
-            row_idx = torch.tensor(phrase_indices).unsqueeze(1)  # (n, 1)
-            modified_positive_maps[row_idx, top_tok_idx] *= gamma
+            n = phrase_indices_tensor.shape[0]
+            k = top_tok_idx_tensor.shape[0]
+            pmap_row = phrase_indices_tensor.view(-1,1).expand(-1, k)  # (n, k)
+            pmap_col = top_tok_idx_tensor.view(1,-1).expand(n, -1) # (n, k)
+            modified_positive_maps.index_put_(
+                (pmap_row, pmap_col),
+                modified_positive_maps[pmap_row, pmap_col] * gamma
+            )
+            modified_logits_for_phrases = modified_positive_maps @ logits.T 
             
-            # 후보 bbox만 남기고 나머지 bbox의 score는 0으로
-            # 후보 bbox에 대해서는 수정된 positive map에 대해서 계산된 최종 score 저장 
+            # 후보 bbox 아니면 0으로 후보 bbox면 수정된 positive map에 대해서 계산된 최종 score 저장 
             logits_for_phrases[phrase_indices] = 0
-            temp_logits_for_phrases = modified_positive_maps @ logits.T
-            logits_for_phrases[phrase_indices][:,topk_indices] = temp_logits_for_phrases[phrase_indices][:,topk_indices]
+            P, K = top_box_idx.shape #(len(phrase_indices), bbox_k)
+            row_idx = phrase_indices_tensor.expand(-1, K)  # (P, K)
+            logits_for_phrases[row_idx, top_box_idx] = modified_logits_for_phrases[row_idx, top_box_idx]
+
 
     else:
         logits_for_phrases = logits_for_phrases_
@@ -449,6 +449,7 @@ while attempt_count < RETRY_LIMIT:
   except Exception as e:
         error_msg = f"Error: {str(e)}\n"
         print(error_msg)
+        traceback.print_exc()
         
         # Log the error message to error.txt
         #with open('error.txt', 'a') as error_file:
