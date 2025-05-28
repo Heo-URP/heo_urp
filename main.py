@@ -277,7 +277,7 @@ def get_grounding_box(source_sentence, image_path, output_dir, box_threshold,
             # 후보 bbox 아니면 0으로 후보 bbox면 수정된 positive map에 대해서 계산된 최종 score 저장 
             logits_for_phrases[phrase_indices] = 0
             P, K = top_box_idx.shape #(len(phrase_indices), bbox_k)
-            row_idx = phrase_indices_tensor.expand(-1, K)  # (P, K)
+            row_idx = phrase_indices_tensor.view(1, -1).expand(-1, K)  # (P, K)
             logits_for_phrases[row_idx, top_box_idx] = modified_logits_for_phrases[row_idx, top_box_idx]
 
 
