@@ -327,7 +327,7 @@ def get_grounding_box(source_sentence, image_path, output_dir, box_threshold,
     image_with_box  , _ , final_boxes= plot_boxes_to_image(image, pred_dict)
     image_with_box.save(os.path.join(output_dir, "pred.jpg"))
     
-    final_boxes = final_boxes.to_list().append([0,0,1,1])
+    final_boxes = final_boxes.tolist().append([0,0,1,1])
     return final_boxes
 
 
