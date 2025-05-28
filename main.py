@@ -211,7 +211,7 @@ def create_positive_map_from_span(tokenized, token_span, max_text_len=256):
 
 
 def get_grounding_box(source_sentence, image_path, output_dir, box_threshold, 
-              get_one_mask=True, with_logits=True, alpha=1, beta=3, tok_k=1, gamma=0.5):
+              get_one_mask=True, with_logits=True, alpha=1, tok_k=3, gamma=0.5):
     grounding_sentences = source_sentence
     grounding_sentences[-1] = ' and '.join(grounding_sentences[:-1])
     token_spans = find_phrase_word_indices(grounding_sentences[-1], grounding_sentences[:-1])
@@ -258,10 +258,11 @@ def get_grounding_box(source_sentence, image_path, output_dir, box_threshold,
             bbox_k = int(round(alpha * len(phrase_indices)))  # 후보 box 개수 - alpha로 조정 
             selected_logits_for_phrases = logits_for_phrases[phrase_indices]  # (len(phrase_indices), nq)
             top_box_idx = torch.topk(selected_logits_for_phrases, bbox_k).indices # 각 group 별 bbox 후보 index (len(phrase_indices), bbox_k)
-
-            tok_idx = torch.argmax(logits[top_box_idx.flatten()], dim=1)  
-            acc_tok_logit = torch.bincount(tok_idx, minlength=logits.shape[-1])  # (256,)
-            top_tok_idx_tensor = torch.topk(acc_tok_logit, k=tok_k).indices  # shape: (tok_k,)
+            
+            flattened_logits = logits[top_box_idx.flatten()]  # (num_boxes, 256)
+            top_toks = torch.topk(flattened_logits, k=tok_k, dim=1).indices # (num_boxes, tok_k)
+            acc_tok_logit = torch.bincount(top_toks.flatten(), minlength=logits.shape[-1])  # (256,)
+            top_tok_idx_tensor = torch.topk(acc_tok_logit, k=1).indices  # (tok_k,) 일단 하나로 해둠
 
             # 추출한 token index에 대한 positive map 값 gamma배
             n = phrase_indices_tensor.shape[0]
