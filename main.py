@@ -1,5 +1,5 @@
 import openai
-from groundascore.groundascore import main
+from groundascore.edit import main
 import base64
 import requests
 from openai import OpenAI
@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 
 from transformers import AutoProcessor, AutoModel
 import torch
+from torchvision import transforms
 
 import re
 from datetime import datetime
@@ -224,7 +225,14 @@ def get_grounding_box(source_sentence, image_path, output_dir, box_threshold,
     processor = AutoProcessor.from_pretrained(model_id)
     model = AutoModel.from_pretrained(model_id).to(device)
 
-    image = Image.open(image_path).convert("RGB")
+    transform = transforms.Compose([
+        # transforms.Resize((512, 512)),
+        transforms.ToTensor(),
+        transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                            std =[0.229, 0.224, 0.225])
+    ])
+    image = transform(Image.open(image_path).convert("RGB"))
+
     text = grounding_sentences[-1]
     text = text.lower()
     text = text.strip()
@@ -253,8 +261,8 @@ def get_grounding_box(source_sentence, image_path, output_dir, box_threshold,
             phrase_indices = list(phrase_indices)
             bbox_k = int(round(alpha * len(phrase_indices)))  # 후보군 개수 alpha로 조정 가능
             selected_logits = logits_for_phrases[phrase_indices]  # (len(phrase_indices), nq)
-            mean_logits = selected_logits.mean(dim=0) # 평균값 기준 (nq,)
-            topk_indices = torch.topk(mean_logits, bbox_k).indices # 각 group 별 bbox 후보 index
+            # mean_logits = selected_logits.mean(dim=0) # 평균값 기준 (nq,)
+            topk_indices = torch.topk(selected_logits, bbox_k).indices # 각 group 별 bbox 후보 index
 
             # 후보 bbox들에 대해서 공통으로 연관이 가장 높은 tok_k개의 token index 추출
             top_logits = logits[topk_indices] #(candidate_boxes, token_labels) 
@@ -319,6 +327,7 @@ def get_grounding_box(source_sentence, image_path, output_dir, box_threshold,
     image_with_box  , _ , final_boxes= plot_boxes_to_image(image, pred_dict)
     image_with_box.save(os.path.join(output_dir, "pred.jpg"))
     
+    final_boxes.append([0,0,1,1])
     return final_boxes
 
 

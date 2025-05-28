@@ -181,7 +181,9 @@ class DDSLoss:
                 gamma = ((((eps_null_target - eps_pred_o_target))*coeff).abs() * mask).mean().clamp(0,1)
             else:
                 gamma = 1
+            
             grad = (alpha_t ** self.alpha_exp) * (sigma_t ** self.sigma_exp) * (eps_pred_target - eps_pred_source) * gamma
+            
             if calibration_grad is not None:
                 if calibration_grad.dim() == 4:
                     grad = grad - calibration_grad
@@ -235,16 +237,17 @@ class DDSLoss:
                             cutloss += cut_loss.get_attn_cut_loss(ref.float(), curr.float())
                 # ================= BOX CDS DONE =============== #        
 
-        loss = z_target * grad.clone()
-        loss = loss * mask
+        # loss = z_target * grad.clone()
+        # loss = loss * mask
+        grad = grad * mask
         
-        if symmetric:
-            loss = loss.sum() / (z_target.shape[2] * z_target.shape[3])
-            loss_symm = self.rescale * z_source * (-grad.clone())
-            loss += loss_symm.sum() / (z_target.shape[2] * z_target.shape[3])
-        elif reduction == 'mean':
-            loss = loss.sum() / (z_target.shape[2] * z_target.shape[3])
-        return loss, cutloss, log_loss, timestep
+        # if symmetric:
+        #     loss = loss.sum() / (z_target.shape[2] * z_target.shape[3])
+        #     loss_symm = self.rescale * z_source * (-grad.clone())
+        #     loss += loss_symm.sum() / (z_target.shape[2] * z_target.shape[3])
+        # elif reduction == 'mean':
+        #     loss = loss.sum() / (z_target.shape[2] * z_target.shape[3])
+        return grad, cutloss, log_loss, timestep
 
     def __init__(self, device, pipe: StableDiffusionPipeline, dtype=torch.float32):
         self.t_min = 50
@@ -306,6 +309,7 @@ def image_optimization(pipeline: StableDiffusionPipeline, image: np.ndarray, tex
         y_max_int = round(y_max * z_source_dimensions[0])  # Height
         bboxes_int.append([x_min_int, y_min_int, x_max_int, y_max_int])
     
+    ###########################################################
     for bbox, i in zip(bboxes_int, range(len(bboxes_int))):
         x_min_int, y_min_int, x_max_int, y_max_int = bbox
         mask = torch.zeros_like(z_source)
@@ -319,11 +323,12 @@ def image_optimization(pipeline: StableDiffusionPipeline, image: np.ndarray, tex
                     mask[:,:,yA:yB, xA:xB] = 0.3
         else:
             if i == 0:
-                mask[:,:,:,:] = 1 
+                mask[:,:,:,:] = 1 #############################################################
             else:
                 stacked_masks = torch.stack(masks)
                 mask = torch.any(stacked_masks, dim=0)
         masks.append(mask)
+    ################################################################
 
     image_target.requires_grad = True
     z_taregt = z_source.clone()
@@ -342,19 +347,23 @@ def image_optimization(pipeline: StableDiffusionPipeline, image: np.ndarray, tex
             embedding_source = torch.stack([embedding_null, embedding_text], dim=1)
             embedding_target = torch.stack([embedding_null, embedding_text_target], dim=1)
 
-            loss, cutloss, _, timestep = dds_loss.get_dds_loss(z_source, z_taregt, embedding_source, embedding_target, bbox_i, mask, CDS_flag = CDS_flag,reweight_flag = reweight_flag)
+            grad, cutloss, _, timestep = dds_loss.get_dds_loss(z_source, z_taregt, embedding_source, embedding_target, bbox_i, mask, CDS_flag = CDS_flag,reweight_flag = reweight_flag)
             if isinstance(beta, list):
                 time_section = torch.div(timestep, 200, rounding_mode='floor')#int(timestep//200)
                 beta_t = beta[time_section]
             else:
                 beta_t = beta
             if j == len(masks) - 1:
-                loss = beta_t * loss
+                grad = beta_t * grad
 
             optimizer.zero_grad()  # Reset gradients from previous iterations
 
             # Compute and backpropagate the primary loss
-            (2000 * loss).backward()  # Backpropagate the main loss
+            # (2000 * loss).backward()  # Backpropagate the main loss
+            if z_taregt.grad is not None:
+                z_taregt.grad += grad  # Accumulate with existing gradients
+            else:
+                z_taregt.grad = grad 
 
             # Compute gradients for the cutloss without zeroing out existing gradients
             if cutloss != 0:
