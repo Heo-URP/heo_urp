@@ -1,11 +1,10 @@
 import openai
-from groundascore.edit import main
+from groundascore.groundascore import main
 import base64
 import requests
 from openai import OpenAI
 import os
 from dotenv import load_dotenv
-import traceback
 
 from transformers import AutoProcessor, AutoModel
 import torch
@@ -21,6 +20,7 @@ from io import BytesIO
 
 import spacy
 from collections import defaultdict
+import traceback
 
 
 load_dotenv() 
@@ -211,7 +211,7 @@ def create_positive_map_from_span(tokenized, token_span, max_text_len=256):
 
 
 def get_grounding_box(source_sentence, image_path, output_dir, box_threshold, 
-              get_one_mask=True, with_logits=True, alpha=1, tok_k=3, gamma=0.5):
+              get_one_mask=True, with_logits=True, alpha=1, beta=3, tok_k=1, gamma=0.5):
     grounding_sentences = source_sentence
     grounding_sentences[-1] = ' and '.join(grounding_sentences[:-1])
     token_spans = find_phrase_word_indices(grounding_sentences[-1], grounding_sentences[:-1])
@@ -226,7 +226,6 @@ def get_grounding_box(source_sentence, image_path, output_dir, box_threshold,
     model = AutoModel.from_pretrained(model_id).to(device)
 
     image = Image.open(image_path).convert("RGB")
-
     text = grounding_sentences[-1]
     text = text.lower()
     text = text.strip()
@@ -246,6 +245,13 @@ def get_grounding_box(source_sentence, image_path, output_dir, box_threshold,
         token_span=token_spans
     ).to(device) # n_phrase, 256
 
+    # _, batch_scores = torch.max(logits, dim=-1)  # (nq,)
+    # threshold = 0.25
+    # keep = batch_scores > threshold
+    # # batch_scores = batch_scores * keep
+    # boxes = boxes[keep]
+    # logits = logits[keep]
+
     logits_for_phrases_ = positive_maps @ logits.T # n_phrase, nq
     #######################_OURS_###########################
     if overlap != False:
@@ -253,34 +259,26 @@ def get_grounding_box(source_sentence, image_path, output_dir, box_threshold,
         modified_positive_maps = positive_maps.clone()
         for _, phrase_indices in overlap.items():
             phrase_indices = list(phrase_indices)
-            phrase_indices_tensor = torch.tensor(phrase_indices)  # (n,)
+            bbox_k = int(round(alpha * len(phrase_indices)))  # 후보군 개수 alpha로 조정 가능
+            selected_logits = logits_for_phrases[phrase_indices]  # (len(phrase_indices), nq)
+            mean_logits = selected_logits.mean(dim=0) # 평균값 기준 (nq,)
+            topk_indices = torch.topk(mean_logits, bbox_k).indices # 각 group 별 bbox 후보 index
 
-            bbox_k = int(round(alpha * len(phrase_indices)))  # 후보 box 개수 - alpha로 조정 
-            selected_logits_for_phrases = logits_for_phrases[phrase_indices]  # (len(phrase_indices), nq)
-            top_box_idx = torch.topk(selected_logits_for_phrases, bbox_k).indices # 각 group 별 bbox 후보 index (len(phrase_indices), bbox_k)
-            
-            flattened_logits = logits[top_box_idx.flatten()]  # (num_boxes, 256)
-            top_toks = torch.topk(flattened_logits, k=tok_k, dim=1).indices # (num_boxes, tok_k)
-            acc_tok_logit = torch.bincount(top_toks.flatten(), minlength=logits.shape[-1])  # (256,)
-            top_tok_idx_tensor = torch.topk(acc_tok_logit, k=1).indices  # (tok_k,) 일단 하나로 해둠
+            # 후보 bbox들에 대해서 공통으로 연관이 가장 높은 tok_k개의 token index 추출
+            top_logits = logits[topk_indices] #(candidate_boxes, token_labels) 
+            hist = torch.topk(top_logits, k=beta, dim=1).indices  # (candidate_boxes, beta)  
+            counts = torch.bincount(hist.flatten(), minlength=top_logits.shape[1])
+            top_tok_idx = torch.topk(counts, k=tok_k).indices 
 
             # 추출한 token index에 대한 positive map 값 gamma배
-            n = phrase_indices_tensor.shape[0]
-            k = top_tok_idx_tensor.shape[0]
-            pmap_row = phrase_indices_tensor.view(-1,1).expand(-1, k)  # (n, k)
-            pmap_col = top_tok_idx_tensor.view(1,-1).expand(n, -1) # (n, k)
-            modified_positive_maps.index_put_(
-                (pmap_row, pmap_col),
-                modified_positive_maps[pmap_row, pmap_col] * gamma
-            )
-            modified_logits_for_phrases = modified_positive_maps @ logits.T 
+            row_idx = torch.tensor(phrase_indices).unsqueeze(1)  # (n, 1)
+            modified_positive_maps[row_idx, top_tok_idx] *= gamma
             
-            # 후보 bbox 아니면 0으로 후보 bbox면 수정된 positive map에 대해서 계산된 최종 score 저장 
+            # 후보 bbox만 남기고 나머지 bbox의 score는 0으로
+            # 후보 bbox에 대해서는 수정된 positive map에 대해서 계산된 최종 score 저장 
             logits_for_phrases[phrase_indices] = 0
-            P, K = top_box_idx.shape #(len(phrase_indices), bbox_k)
-            row_idx = phrase_indices_tensor.view(1, -1).expand(-1, K)  # (P, K)
-            logits_for_phrases[row_idx, top_box_idx] = modified_logits_for_phrases[row_idx, top_box_idx]
-
+            temp_logits_for_phrases = modified_positive_maps @ logits.T
+            logits_for_phrases[phrase_indices][:,topk_indices] = temp_logits_for_phrases[phrase_indices][:,topk_indices]
 
     else:
         logits_for_phrases = logits_for_phrases_
@@ -448,8 +446,8 @@ while attempt_count < RETRY_LIMIT:
     
 
   except Exception as e:
-        error_msg = f"Error: {str(e)}\n"
-        print(error_msg)
+        # error_msg = f"Error: {str(e)}\n"
+        # print(error_msg)
         traceback.print_exc()
         
         # Log the error message to error.txt
@@ -460,6 +458,4 @@ while attempt_count < RETRY_LIMIT:
         if attempt_count < RETRY_LIMIT:
             print(f"Retrying... Attempt {attempt_count + 1}/{RETRY_LIMIT}")
         else:
-            print("Max retries reached. Moving on to the next file.")
-
-print("The image has been edited successfully. check the output folder for the edited image.")    
+            print("Max retries reached. Moving on to the next file.")   
