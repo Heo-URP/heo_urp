@@ -312,7 +312,10 @@ def image_optimization(pipeline: StableDiffusionPipeline, image: np.ndarray, tex
     for bbox, i in zip(bboxes_int, range(len(bboxes_int))):
         x_min_int, y_min_int, x_max_int, y_max_int = bbox
         mask = torch.zeros_like(z_source)
-        if not i == len(bboxes_int) - 1:
+        if i == len(bboxes_int) - 1:
+            stacked_masks = torch.stack(masks)
+            mask = torch.any(stacked_masks, dim=0)
+        else: 
             mask[:,:,y_min_int:y_max_int, x_min_int:x_max_int] = 1
             for other_bbox in bboxes_int:
                 if other_bbox == bbox or other_bbox == [0, 0, 64, 64]:
@@ -320,12 +323,7 @@ def image_optimization(pipeline: StableDiffusionPipeline, image: np.ndarray, tex
                 xA,yA,xB,yB,max_index = calculate_intersection(bbox, other_bbox)
                 if max_index == 1: #if other box ratio is higher
                     mask[:,:,yA:yB, xA:xB] = 0.3
-        else:
-            if i == 0:
-                mask[:,:,:,:] = 1 #############################################################
-            else:
-                stacked_masks = torch.stack(masks)
-                mask = torch.any(stacked_masks, dim=0)
+
         masks.append(mask)
     ################################################################
 
@@ -392,11 +390,11 @@ def main(source_sentence, target_sentence, image_path,output_dir = "output/1111"
 
     image = load_512(image_path)
 
-    timezone = pytz.timezone('Asia/Seoul')#type_your_timezone
-    now = datetime.now(timezone)
-    time_f_name = now.strftime("%Y%m%d_%H%M%S")
-    output_dir = os.path.join(output_dir,time_f_name)
-    create_directory_if_not_exists(output_dir)
+    # timezone = pytz.timezone('Asia/Seoul')#type_your_timezone
+    # now = datetime.now(timezone)
+    # time_f_name = now.strftime("%Y%m%d_%H%M%S")
+    # output_dir = os.path.join(output_dir,time_f_name)
+    # create_directory_if_not_exists(output_dir)
 
     if masked_DDS:#run masked DDS
         if (not isinstance(source_sentence, list)) and (not isinstance(target_sentence, list)):
