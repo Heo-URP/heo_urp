@@ -20,6 +20,7 @@ from io import BytesIO
 
 import spacy
 from collections import defaultdict
+import traceback
 
 
 load_dotenv() 
@@ -244,6 +245,13 @@ def get_grounding_box(source_sentence, image_path, output_dir, box_threshold,
         token_span=token_spans
     ).to(device) # n_phrase, 256
 
+    # _, batch_scores = torch.max(logits, dim=-1)  # (nq,)
+    # threshold = 0.25
+    # keep = batch_scores > threshold
+    # # batch_scores = batch_scores * keep
+    # boxes = boxes[keep]
+    # logits = logits[keep]
+
     logits_for_phrases_ = positive_maps @ logits.T # n_phrase, nq
     #######################_OURS_###########################
     if overlap != False:
@@ -258,9 +266,8 @@ def get_grounding_box(source_sentence, image_path, output_dir, box_threshold,
 
             # 후보 bbox들에 대해서 공통으로 연관이 가장 높은 tok_k개의 token index 추출
             top_logits = logits[topk_indices] #(candidate_boxes, token_labels) 
-            hist = torch.topk(top_logits, k=beta, dim=1).indices  # token_idx
-            hist = hist.flatten()  
-            counts = torch.bincount(hist, minlength=top_logits.shape[1])
+            hist = torch.topk(top_logits, k=beta, dim=1).indices  # (candidate_boxes, beta)  
+            counts = torch.bincount(hist.flatten(), minlength=top_logits.shape[1])
             top_tok_idx = torch.topk(counts, k=tok_k).indices 
 
             # 추출한 token index에 대한 positive map 값 gamma배
@@ -433,13 +440,15 @@ while attempt_count < RETRY_LIMIT:
     attempt_count =1000
 
     bbox = get_grounding_box(source_sentence, image_path, output_dir, box_threshold=0.3).tolist()
+    bbox.append([0,0,1,1])
     main(source_sentence, target_sentence,image_path,num_iters = 500,beta = beta, 
         bbox = bbox, output_dir=output_dir,cutloss_flag = preserve_form)
     
 
   except Exception as e:
-        error_msg = f"Error: {str(e)}\n"
-        print(error_msg)
+        # error_msg = f"Error: {str(e)}\n"
+        # print(error_msg)
+        traceback.print_exc()
         
         # Log the error message to error.txt
         #with open('error.txt', 'a') as error_file:
@@ -449,6 +458,4 @@ while attempt_count < RETRY_LIMIT:
         if attempt_count < RETRY_LIMIT:
             print(f"Retrying... Attempt {attempt_count + 1}/{RETRY_LIMIT}")
         else:
-            print("Max retries reached. Moving on to the next file.")
-
-print("The image has been edited successfully. check the output folder for the edited image.")    
+            print("Max retries reached. Moving on to the next file.")   
