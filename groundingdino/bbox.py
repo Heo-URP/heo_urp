@@ -242,7 +242,7 @@ def get_grounding_box(source_sentence, image_path, output_dir, box_threshold,
     all_boxes = []
 
     phrase_counts = {}
-    for (token_span, logit_phr) in zip(token_spans, logits_for_phrases):
+    for i, (token_span, logit_phr) in enumerate(zip(token_spans, logits_for_phrases)):
         # get phrase
         phrase = ' '.join([text[_s:_e] for (_s, _e) in token_span])
         phrase_counts[phrase] = phrase_counts.get(phrase, 0) + 1
