@@ -284,7 +284,7 @@ def calculate_intersection(box_a, box_b):
 
 def image_optimization(pipeline: StableDiffusionPipeline, image: np.ndarray, texts_source: list,
                         texts_target: list, num_iters=200, bbox = None,output_dir ="logs/1111",reweight_flags = None,
-                         beta = 1., cutloss_flag = None,edit_intensities =None) -> None:
+                         beta = 1., cutloss_flag = None,edit_intensities =None, r=0.2, sigma=10) -> None:
     register_attention_control(pipeline)    
     dds_loss = DDSLoss(device, pipeline)
     image_source = torch.from_numpy(image).float().permute(2, 0, 1) / 127.5 - 1
@@ -300,23 +300,37 @@ def image_optimization(pipeline: StableDiffusionPipeline, image: np.ndarray, tex
     z_source_dimensions = z_source.shape[2:4]
     bboxes_int = []
     masks = []
+    ###########################################################
     for bbox in bboxes_float:
         x_min, y_min, x_max, y_max = bbox
         x_min_int = round(x_min * z_source_dimensions[1])  # Width
         y_min_int = round(y_min * z_source_dimensions[0])  # Height
         x_max_int = round(x_max * z_source_dimensions[1])  # Width
         y_max_int = round(y_max * z_source_dimensions[0])  # Height
-        bboxes_int.append([x_min_int, y_min_int, x_max_int, y_max_int])
-    
-    ###########################################################
+        x_min_bound = round(max(0, x_min_int * (1-r)))
+        y_min_bound = round(max(0, y_min_int * (1-r)))
+        x_max_bound = round(min(z_source_dimensions[1], x_max_int * (1+r)))
+        y_max_bound = round(min(z_source_dimensions[0], y_max_int * (1+r)))
+        bboxes_int.append([x_min_int, y_min_int, x_max_int, y_max_int], [x_min_bound, y_min_bound, x_max_bound, y_max_bound])
+
+
     for bbox, i in zip(bboxes_int, range(len(bboxes_int))):
-        x_min_int, y_min_int, x_max_int, y_max_int = bbox
+        x_min_int, y_min_int, x_max_int, y_max_int = bbox[0]
+        x_min_bound, y_min_bound, x_max_bound, y_max_bound = bbox[1]
         mask = torch.zeros_like(z_source)
         if i == len(bboxes_int) - 1:
             stacked_masks = torch.stack(masks)
             mask = torch.any(stacked_masks, dim=0)
         else: 
-            mask[:,:,y_min_int:y_max_int, x_min_int:x_max_int] = 1
+            y_grid, x_grid = np.meshgrid(np.arange(y_min_bound, y_max_bound), np.arange(x_min_bound, x_max_bound), indexing='ij')
+            dx = np.maximum(np.maximum(x_min - x_grid, 0), np.maximum(x_grid - x_max, 0))
+            dy = np.maximum(np.maximum(y_min - y_grid, 0), np.maximum(y_grid - y_max, 0))
+            dist = np.sqrt(dx**2 + dy**2)
+            gaussian = np.exp(-(dist**2) / (2 * sigma**2)) #box 안쪽은 1, boundary부터 바깥쪽으로 갈수록 작아지게
+
+            mask[:,:,y_min_bound:y_max_bound, x_min_bound:x_max_bound] = gaussian
+            mask = np.clip(mask, 0.0, 1.0)
+
             for other_bbox in bboxes_int:
                 if other_bbox == bbox or other_bbox == [0, 0, 64, 64]:
                     continue
