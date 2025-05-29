@@ -12,7 +12,7 @@ output_file = "./data/annotations.jsonl"
 
 image_files = sorted([f for f in os.listdir(image_dir) if f.lower().endswith(('.jpg', '.png'))])
 
-with open(output_file, "w", encoding='utf-8') as out_f:
+with open(output_file, "a", encoding='utf-8') as out_f:
     for img_idx, img_name in enumerate(image_files):
         img_path = os.path.join(image_dir, img_name)
         print(f"\n{'='*50}")
