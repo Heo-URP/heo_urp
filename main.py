@@ -145,13 +145,20 @@ while attempt_count < RETRY_LIMIT:
     preserve_form_start = input_str.find('[', preserve_form_index)
     preserve_form_end = input_str.find(']', preserve_form_start) + 1
 
+    objects_index = input_str.find('objects_list', preserve_form_end) + len('objects_list')
+    objects_start = input_str.find('[', objects_index)
+    objects_end = input_str.find(']', objects_start) + 1
+
+
 
     source_sentence_str = input_str[source_start:source_end]
     target_sentence_str = input_str[target_start:target_end]
     preserve_form = input_str[preserve_form_start:preserve_form_end]
+    objects_str = input_str[objects_start:objects_end]
     source_sentence = eval(source_sentence_str)
     target_sentence = eval(target_sentence_str)
     preserve_form = eval(preserve_form)
+    objects = eval(objects_str)
 
     beta = [0.5,0.4,0.3,0.2,0.1]
     output_dir = Path.cwd()/"output"
@@ -166,7 +173,7 @@ while attempt_count < RETRY_LIMIT:
 
     attempt_count =1000
 
-    bbox = get_grounding_box(source_sentence, image_path, output_dir, box_threshold=0.3).tolist()
+    bbox = get_grounding_box(source_sentence, image_path, output_dir, objects, box_threshold=0.3).tolist()
     bbox.append([0,0,1,1])
     main(source_sentence, target_sentence,image_path,num_iters = 500,beta = beta, 
         bbox = bbox, output_dir=output_dir,cutloss_flag = preserve_form)

@@ -4,6 +4,7 @@ import torch
 
 import os
 import re 
+import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 import spacy
 from collections import defaultdict
@@ -104,19 +105,16 @@ def find_phrase_word_indices(sentence, phrases):
     return results
 
 
-#######################_OURS_###########################
-def sort_groups(phrases):
-    nlp = spacy.load("en_core_web_sm")
 
-    groups = defaultdict(list)
-    for idx, text in enumerate(phrases):
-        nouns = [token.text.lower() for token in nlp(text) if token.pos_ == "NOUN"]
-        noun = nouns[0] #phrase 마다 객체 하나 
-        groups[noun].append(idx)
+def sort_groups(objects):
 
-    groups = {k: v for k, v in groups.items() if len(v) > 1}
-    return groups if groups else False
-########################################################
+    grouped_indices = defaultdict(list)
+
+    for idx, obj in enumerate(objects):
+        grouped_indices[obj].append(idx)
+    filtered = {k: v for k, v in grouped_indices.items() if len(v) >= 2}
+    return filtered if filtered else False
+
 
 
 def create_positive_map_from_span(tokenized, token_span, max_text_len=256):
@@ -162,14 +160,12 @@ def create_positive_map_from_span(tokenized, token_span, max_text_len=256):
 
 
 
-def get_grounding_box(source_sentence, image_path, output_dir, box_threshold, 
+def get_grounding_box(source_sentence, image_path, output_dir, objects, box_threshold, 
               get_one_mask=True, with_logits=True, alpha=1, beta=3, tok_k=1, gamma=0.5):
     grounding_sentences = source_sentence
     grounding_sentences[-1] = ' and '.join(grounding_sentences[:-1])
     token_spans = find_phrase_word_indices(grounding_sentences[-1], grounding_sentences[:-1])
-    #######################_OURS_###########################
-    overlap = sort_groups(grounding_sentences[:-1])
-    ########################################################
+    overlap = sort_groups(objects)
 
     model_id = "IDEA-Research/grounding-dino-base"
     device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -197,6 +193,7 @@ def get_grounding_box(source_sentence, image_path, output_dir, box_threshold,
         token_span=token_spans
     ).to(device) # n_phrase, 256
 
+
     # _, batch_scores = torch.max(logits, dim=-1)  # (nq,)
     # threshold = 0.25
     # keep = batch_scores > threshold
@@ -205,37 +202,31 @@ def get_grounding_box(source_sentence, image_path, output_dir, box_threshold,
     # logits = logits[keep]
 
     logits_for_phrases_ = positive_maps @ logits.T # n_phrase, nq
-    #######################_OURS_###########################
+
     if overlap != False:
+        objects_token_spans = find_phrase_word_indices(grounding_sentences[-1], objects)
+        object_positive_maps = create_positive_map_from_span(
+            processor.tokenizer(text),
+            token_span = objects_token_spans
+        ).to(device)
+        object_scores = object_positive_maps @ logits.T
+
         logits_for_phrases = logits_for_phrases_.clone()
-        modified_positive_maps = positive_maps.clone()
+        modified_positive_maps = (positive_maps - object_positive_maps).clamp(min=0)
+
         for _, phrase_indices in overlap.items():
-            phrase_indices = list(phrase_indices)
-            bbox_k = int(round(alpha * len(phrase_indices)))  # 후보군 개수 alpha로 조정 가능
-            selected_logits = logits_for_phrases[phrase_indices]  # (len(phrase_indices), nq)
-            mean_logits = selected_logits.mean(dim=0) # 평균값 기준 (nq,)
-            topk_indices = torch.topk(mean_logits, bbox_k).indices # 각 group 별 bbox 후보 index
+            bbox_k = int(alpha * len(phrase_indices))
+            topk_indices = torch.topk(object_scores[phrase_indices], k=bbox_k, dim=1).indices # (len(phrase_indices), bbox_k)
 
-            # 후보 bbox들에 대해서 공통으로 연관이 가장 높은 tok_k개의 token index 추출
-            top_logits = logits[topk_indices] #(candidate_boxes, token_labels) 
-            hist = torch.topk(top_logits, k=beta, dim=1).indices  # (candidate_boxes, beta)  
-            counts = torch.bincount(hist.flatten(), minlength=top_logits.shape[1])
-            top_tok_idx = torch.topk(counts, k=tok_k).indices 
-
-            # 추출한 token index에 대한 positive map 값 gamma배
-            row_idx = torch.tensor(phrase_indices).unsqueeze(1)  # (n, 1)
-            modified_positive_maps[row_idx, top_tok_idx] *= gamma
-            
-            # 후보 bbox만 남기고 나머지 bbox의 score는 0으로
-            # 후보 bbox에 대해서는 수정된 positive map에 대해서 계산된 최종 score 저장 
             logits_for_phrases[phrase_indices] = 0
-            temp_logits_for_phrases = modified_positive_maps @ logits.T
-            logits_for_phrases[phrase_indices][:,topk_indices] = temp_logits_for_phrases[phrase_indices][:,topk_indices]
+            modified_logits_for_phrases = modified_positive_maps @ logits.T
+            gathered_values = torch.gather(modified_logits_for_phrases[phrase_indices], dim=1, index=topk_indices)
+            row_indices = torch.tensor(phrase_indices).unsqueeze(1).expand(-1, topk_indices.size(1))
+            logits_for_phrases[row_indices, topk_indices] = gathered_values
 
     else:
         logits_for_phrases = logits_for_phrases_
 
-    ########################################################
     
     all_logits = []
     all_phrases = []
