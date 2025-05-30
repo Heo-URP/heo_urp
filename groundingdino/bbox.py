@@ -161,7 +161,7 @@ def create_positive_map_from_span(tokenized, token_span, max_text_len=256):
 
 
 def get_grounding_box(source_sentence, image_path, output_dir, objects, box_threshold, 
-              get_one_mask=True, with_logits=True, alpha=1, beta=3, tok_k=1, gamma=0.5):
+              get_one_mask=True, with_logits=True, alpha=1.5, gamma=1):
     grounding_sentences = source_sentence
     grounding_sentences[-1] = ' and '.join(grounding_sentences[:-1])
     token_spans = find_phrase_word_indices(grounding_sentences[-1], grounding_sentences[:-1])
@@ -194,12 +194,12 @@ def get_grounding_box(source_sentence, image_path, output_dir, objects, box_thre
     ).to(device) # n_phrase, 256
 
 
-    # _, batch_scores = torch.max(logits, dim=-1)  # (nq,)
-    # threshold = 0.25
-    # keep = batch_scores > threshold
-    # # batch_scores = batch_scores * keep
-    # boxes = boxes[keep]
-    # logits = logits[keep]
+    _, batch_scores = torch.max(logits, dim=-1)  # (nq,)
+    threshold = 0.25
+    keep = batch_scores > threshold
+    # batch_scores = batch_scores * keep
+    boxes = boxes[keep]
+    logits = logits[keep]
 
     logits_for_phrases_ = positive_maps @ logits.T # n_phrase, nq
 
@@ -212,7 +212,7 @@ def get_grounding_box(source_sentence, image_path, output_dir, objects, box_thre
         object_scores = object_positive_maps @ logits.T
 
         logits_for_phrases = logits_for_phrases_.clone()
-        modified_positive_maps = (positive_maps - object_positive_maps).clamp(min=0)
+        modified_positive_maps = (positive_maps - gamma * object_positive_maps).clamp(min=0)
 
         for _, phrase_indices in overlap.items():
             bbox_k = int(alpha * len(phrase_indices))
