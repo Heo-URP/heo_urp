@@ -1,5 +1,5 @@
 import openai
-from groundascore.groundascore import main
+from groundascore.edit import main
 from groundingdino.bbox import get_grounding_box
 import base64
 import requests
