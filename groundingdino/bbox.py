@@ -161,7 +161,7 @@ def create_positive_map_from_span(tokenized, token_span, max_text_len=256):
 
 
 def get_grounding_box(source_sentence, image_path, output_dir, objects, box_threshold, 
-              get_one_mask=True, with_logits=True, alpha=1.5, gamma=1):
+              get_one_mask=True, with_logits=True, alpha=1.5, gamma=1.0):
     grounding_sentences = source_sentence
     grounding_sentences[-1] = ' and '.join(grounding_sentences[:-1])
     token_spans = find_phrase_word_indices(grounding_sentences[-1], grounding_sentences[:-1])
@@ -215,6 +215,11 @@ def get_grounding_box(source_sentence, image_path, output_dir, objects, box_thre
         modified_positive_maps = (positive_maps - gamma * object_positive_maps).clamp(min=0)
 
         for _, phrase_indices in overlap.items():
+            # threshold = 0.25
+            # mask = logits_for_phrases[phrase_indices] > threshold  # shape: (n_subset, n_queries)
+            # bbox_k = int(mask.sum(dim=1).float().mean().item())  # shape: (n_subset,)
+            # topk_indices = torch.topk(object_scores[phrase_indices], k=bbox_k, dim=1).indices
+            phrase_indices = phrase_indices[1:]
             bbox_k = int(alpha * len(phrase_indices))
             topk_indices = torch.topk(object_scores[phrase_indices], k=bbox_k, dim=1).indices # (len(phrase_indices), bbox_k)
 
