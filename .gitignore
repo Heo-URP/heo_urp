@@ -5,6 +5,8 @@ test_images2
 etc_ignore
 image
 groundingdino/weights
+ext.py
+iter.py
 
 
 

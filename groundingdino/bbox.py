@@ -219,7 +219,6 @@ def get_grounding_box(source_sentence, image_path, output_dir, objects, box_thre
             # mask = logits_for_phrases[phrase_indices] > threshold  # shape: (n_subset, n_queries)
             # bbox_k = int(mask.sum(dim=1).float().mean().item())  # shape: (n_subset,)
             # topk_indices = torch.topk(object_scores[phrase_indices], k=bbox_k, dim=1).indices
-            phrase_indices = phrase_indices[1:]
             bbox_k = int(alpha * len(phrase_indices))
             topk_indices = torch.topk(object_scores[phrase_indices], k=bbox_k, dim=1).indices # (len(phrase_indices), bbox_k)
 
