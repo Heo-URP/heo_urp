@@ -143,12 +143,12 @@ def full_pipe(image_path, responses, output_dir = None):
             output_dir = Path.cwd()/"output"
             if not os.path.exists(output_dir):
               os.mkdir(output_dir)
-        timezone = pytz.timezone('Asia/Seoul')#type_your_timezone
-        now = datetime.now(timezone)
-        time_f_name = now.strftime("%Y%m%d_%H%M%S")
-        output_dir = os.path.join(output_dir,time_f_name)
-        if not os.path.exists(output_dir):
-          os.mkdir(output_dir)
+            timezone = pytz.timezone('Asia/Seoul')#type_your_timezone
+            now = datetime.now(timezone)
+            time_f_name = now.strftime("%Y%m%d_%H%M%S")
+            output_dir = os.path.join(output_dir,time_f_name)
+            if not os.path.exists(output_dir):
+              os.mkdir(output_dir)
 
         attempt_count =1000
 

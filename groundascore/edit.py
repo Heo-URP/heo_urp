@@ -25,6 +25,7 @@ from PIL import Image
 #from tqdm.notebook import tqdm
 from IPython.display import display, clear_output
 from tqdm import tqdm
+from pathlib import Path
 
 from groundingdino.inference_on_a_image import main_run
 import time
@@ -284,7 +285,7 @@ def calculate_intersection(box_a, box_b):
 
 def image_optimization(pipeline: StableDiffusionPipeline, image: np.ndarray, texts_source: list,
                         texts_target: list, num_iters=200, bbox = None,output_dir ="logs/1111",reweight_flags = None,
-                         beta = 1., cutloss_flag = None,edit_intensities =None, r=0.2, sigma=10) -> None:
+                         beta = 1., cutloss_flag = None,edit_intensities =None, r=0.2, sigma=10, image_name='') -> None:
     register_attention_control(pipeline)    
     dds_loss = DDSLoss(device, pipeline)
     image_source = torch.from_numpy(image).float().permute(2, 0, 1) / 127.5 - 1
@@ -392,19 +393,19 @@ def image_optimization(pipeline: StableDiffusionPipeline, image: np.ndarray, tex
             optimizer.step()
         if (i + 1) % 100 == 0:
             out = decode(z_taregt, pipeline, im_cat=image)
-            out.save(os.path.join(output_dir, f"result_{i+1}.jpg"),"JPEG")
+            out.save(os.path.join(output_dir, f"{image_name}_gen{i+1}.jpg"),"JPEG")
             del out
     out = decode(z_taregt, pipeline, im_cat=image)
-    out.save(os.path.join(output_dir, f"result_{i+1}.jpg"),"JPEG")
+    out.save(os.path.join(output_dir, f"{image_name}_result.jpg"),"JPEG")
     del out
         
 
-def main(source_sentence, target_sentence, image_path,output_dir = "output/1111",num_iters = 500,model_id = "runwayml/stable-diffusion-v1-5",
+def main(source_sentence, target_sentence, image_path, output_dir = "output/1111",num_iters = 500,model_id = "runwayml/stable-diffusion-v1-5",
          masked_DDS = True, beta = [0.5,0.4,0.3,0.2,0.1],grounding_sentences = None,
         bbox = None, cutloss_flag = None, edit_intensities = None,reweight_flags=None):
 
     image = load_512(image_path)
-
+    image_name = Path(image_path).stem
     # timezone = pytz.timezone('Asia/Seoul')#type_your_timezone
     # now = datetime.now(timezone)
     # time_f_name = now.strftime("%Y%m%d_%H%M%S")
@@ -461,5 +462,5 @@ def main(source_sentence, target_sentence, image_path,output_dir = "output/1111"
         edit_intensities = [1]*len(text_source)
     log_image_optimization_params(output_dir, text_source, text_target, num_iters, bbox, beta, cutloss_flag,image_path,reweight_flags)
     image_optimization(pipeline, image, text_source , text_target, num_iters = num_iters, bbox=bbox,
-                       output_dir = output_dir, beta = beta,
-                       cutloss_flag = cutloss_flag,reweight_flags = reweight_flags,edit_intensities = edit_intensities)
+                       output_dir = output_dir, beta = beta, cutloss_flag = cutloss_flag,reweight_flags = reweight_flags,
+                       edit_intensities = edit_intensities, image_name = image_name)
