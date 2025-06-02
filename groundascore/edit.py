@@ -47,25 +47,27 @@ device = torch.device('cuda:0')
 
 
 
-def load_512(image_path: str, left=0, right=0, top=0, bottom=0):
-    image = np.array(Image.open(image_path))[:, :, :3]    
-    h, w, c = image.shape
-    left = min(left, w-1) #0
-    right = min(right, w - left - 1)#w-1
-    top = min(top, h - left - 1)#0
-    bottom = min(bottom, h - top - 1)#h-1
-    image = image[top:h-bottom, left:w-right]
-    h, w, c = image.shape
-    if h < w:
-        offset = (w - h) // 2
-        image = image[:, offset:offset + h]
-    elif w < h:
-        offset = (h - w) // 2
-        image = image[offset:offset + w]
-    image = np.array(Image.fromarray(image).resize((512, 512)))
-    return image
+def load_img(image_path: str):
+    image = Image.open(image_path).convert("RGB")
+    w, h = image.size  
+
+    scale = min(512 / w, 512 / h, 1.0)  
+    new_w, new_h = int(w * scale), int(h * scale)
+    resized = image.resize((new_w, new_h), resample=Image.BICUBIC)
+
+    pad_left = (512 - new_w) // 2
+    pad_top = (512 - new_h) // 2
+    padded = Image.new("RGB", (512, 512), (0, 0, 0))
+    padded.paste(resized, (pad_left, pad_top))
+
+    return np.array(padded), (w, h), (new_w, new_h), (pad_left, pad_top)
 
 
+def crop_resize(image_pil, orig_size, new_size, pad):
+    pad_left, pad_top = pad
+    new_w, new_h = new_size
+    cropped = image_pil.crop((pad_left, pad_top, pad_left + new_w, pad_top + new_h))
+    return cropped.resize(orig_size, Image.BICUBIC)
 
 
 @torch.no_grad()
@@ -82,12 +84,11 @@ def denormalize(image):
     return image[0]
 
 @torch.no_grad()
-def decode(latent: T, pipeline: StableDiffusionPipeline, im_cat: TN = None):
+def decode(latent: T, pipeline: StableDiffusionPipeline):
     image = pipeline.vae.decode((1 / 0.18215) * latent, return_dict=False)[0]
     image = denormalize(image)
-    if im_cat is not None:
-        image = np.concatenate((im_cat, image), axis=1)
     return Image.fromarray(image)
+
 
 def init_pipe(device, dtype, unet, scheduler) -> Tuple[UNet2DConditionModel, T, T]:
 
@@ -285,7 +286,8 @@ def calculate_intersection(box_a, box_b):
 
 def image_optimization(pipeline: StableDiffusionPipeline, image: np.ndarray, texts_source: list,
                         texts_target: list, num_iters=200, bbox = None,output_dir ="logs/1111",reweight_flags = None,
-                         beta = 1., cutloss_flag = None,edit_intensities =None, r=0.2, sigma=10, image_name='') -> None:
+                         beta = 1., cutloss_flag = None,edit_intensities =None, 
+                         r=0.2, sigma=10, image_name='', im_size=None, new_size=None, crop_info=None) -> None:
     register_attention_control(pipeline)    
     dds_loss = DDSLoss(device, pipeline)
     image_source = torch.from_numpy(image).float().permute(2, 0, 1) / 127.5 - 1
@@ -392,10 +394,12 @@ def image_optimization(pipeline: StableDiffusionPipeline, image: np.ndarray, tex
             # Update parameters based on total accumulated gradients
             optimizer.step()
         if (i + 1) % 100 == 0:
-            out = decode(z_taregt, pipeline, im_cat=image)
+            out = decode(z_taregt, pipeline, size=im_size, crop_info=crop_info)
+            out = crop_resize(out, im_size, new_size, crop_info)
             out.save(os.path.join(output_dir, f"{image_name}_gen{i+1}.jpg"),"JPEG")
             del out
-    out = decode(z_taregt, pipeline, im_cat=image)
+    out = decode(z_taregt, pipeline, size=im_size, crop_info=crop_info)
+    out = crop_resize(out, im_size, new_size, crop_info)
     out.save(os.path.join(output_dir, f"{image_name}_result.jpg"),"JPEG")
     del out
         
@@ -404,7 +408,7 @@ def main(source_sentence, target_sentence, image_path, output_dir = "output/1111
          masked_DDS = True, beta = [0.5,0.4,0.3,0.2,0.1],grounding_sentences = None,
         bbox = None, cutloss_flag = None, edit_intensities = None,reweight_flags=None):
 
-    image = load_512(image_path)
+    image, im_size, new_size, crop_info = load_img(image_path)
     image_name = Path(image_path).stem
     # timezone = pytz.timezone('Asia/Seoul')#type_your_timezone
     # now = datetime.now(timezone)
@@ -463,4 +467,4 @@ def main(source_sentence, target_sentence, image_path, output_dir = "output/1111
     log_image_optimization_params(output_dir, text_source, text_target, num_iters, bbox, beta, cutloss_flag,image_path,reweight_flags)
     image_optimization(pipeline, image, text_source , text_target, num_iters = num_iters, bbox=bbox,
                        output_dir = output_dir, beta = beta, cutloss_flag = cutloss_flag,reweight_flags = reweight_flags,
-                       edit_intensities = edit_intensities, image_name = image_name)
+                       edit_intensities = edit_intensities, image_name = image_name, im_size = im_size, new_size=new_size, crop_info=crop_info)
