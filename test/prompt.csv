@@ -1,3 +1,13 @@
 image_path,transform
-tests/images/cat.jpg,change cat into dog
-tests/images/beach.jpg,change sky into sunset
+COCO_train2014_000000000154.jpg,Transform the closest zebra into a horse Transform the medium zebra into a foal
+COCO_train2014_000000000321.jpg,Transform the hotdog with cheese and onions into a hamburger Transform the left sandwich into a hotdog
+COCO_train2014_000000001319.jpg,Transform the bigger cat into a dog Transform the smaller cat into a puppy
+COCO_train2014_000000001580.jpg,Transform the person in the middle laughing Transform the person in red suit into a woman
+COCO_train2014_000000002639.jpg,Transform the left bus into red Transform right bus into yellow
+COCO_train2014_000000004527.jpg,Transform the player 19 into wearing strip uniform Tranform the right player falling
+COCO_train2014_000000005215.jpg,Transform the lighter jeans into black jeans Transform the brown shoes into black boots Transform the darker jeans into a skirt
+COCO_train2014_000000005344.jpg,Transform the left zebra into a giraffe Transform the right zebra into a horse
+COCO_train2014_000000005832.jpg, Transform the leftmost laptop screen into dark screen Transform the rightmost screen into blue screen
+COCO_train2014_000000013471.jpg,Transform the bigger cow into a sheep Transform the smaller cow into a lion
+COCO_train2014_000000014014.jpg,Transform the left sandwich into pancakes Transform the right sandwich into pinutbutter sandwich
+COCO_train2014_000000014683.jpg,Transform the lighter colored horse into black horse Transform the left horse into white horse
