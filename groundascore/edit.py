@@ -464,7 +464,7 @@ def main(source_sentence, target_sentence, image_path, output_dir = "output/1111
         cutloss_flag = [False]*len(text_source)
     if edit_intensities == None:
         edit_intensities = [1]*len(text_source)
-    log_image_optimization_params(output_dir, text_source, text_target, num_iters, bbox, beta, cutloss_flag,image_path,reweight_flags)
+    log_image_optimization_params(str(output_dir), text_source, text_target, num_iters, bbox, beta, cutloss_flag,str(image_path),reweight_flags)
     image_optimization(pipeline, image, text_source , text_target, num_iters = num_iters, bbox=bbox,
                        output_dir = output_dir, beta = beta, cutloss_flag = cutloss_flag,reweight_flags = reweight_flags,
                        edit_intensities = edit_intensities, image_name = image_name, im_size = im_size, new_size=new_size, crop_info=crop_info)
