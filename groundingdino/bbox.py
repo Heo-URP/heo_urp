@@ -175,6 +175,9 @@ def get_grounding_box(source_sentence, image_path, output_dir, objects, box_thre
     model = AutoModel.from_pretrained(model_id).to(device)
 
     image = Image.open(image_path).convert("RGB")
+    image_name = Path(image_path).stem
+    image.save(os.path.join(output_dir,f"{image_name}_raw.jpg"))
+    
     text = grounding_sentences[-1]
     text = text.lower()
     text = text.strip()
@@ -272,6 +275,6 @@ def get_grounding_box(source_sentence, image_path, output_dir, objects, box_thre
         "labels": pred_phrases,
     }
     image_with_box  , _ , final_boxes= plot_boxes_to_image(image, pred_dict)
-    image_with_box.save(os.path.join(output_dir, f"{Path(image_path).stem}_pred.jpg"))
+    image_with_box.save(os.path.join(output_dir, f"{image_name}_pred.jpg"))
     
     return final_boxes
