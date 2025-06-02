@@ -7,6 +7,7 @@ image
 groundingdino/weights
 ext.py
 iter.py
+test/results
 
 
 
