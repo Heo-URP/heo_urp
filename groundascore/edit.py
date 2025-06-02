@@ -240,7 +240,7 @@ class DDSLoss:
 
         # loss = z_target * grad.clone()
         # loss = loss * mask
-        grad = grad * mask
+        grad = 0.5 * grad * mask
         
         # if symmetric:
         #     loss = loss.sum() / (z_target.shape[2] * z_target.shape[3])
@@ -310,37 +310,27 @@ def image_optimization(pipeline: StableDiffusionPipeline, image: np.ndarray, tex
         y_min_int = round(y_min * z_source_dimensions[0])  # Height
         x_max_int = round(x_max * z_source_dimensions[1])  # Width
         y_max_int = round(y_max * z_source_dimensions[0])  # Height
-        x_min_bound = round(max(0, x_min_int * (1-r)))
-        y_min_bound = round(max(0, y_min_int * (1-r)))
-        x_max_bound = round(min(z_source_dimensions[1], x_max_int * (1+r)))
-        y_max_bound = round(min(z_source_dimensions[0], y_max_int * (1+r)))
-        bboxes_int.append([[x_min_int, y_min_int, x_max_int, y_max_int], [x_min_bound, y_min_bound, x_max_bound, y_max_bound]])
-
+        bboxes_int.append([x_min_int, y_min_int, x_max_int, y_max_int])
 
     for bbox, i in zip(bboxes_int, range(len(bboxes_int))):
-        x_min_int, y_min_int, x_max_int, y_max_int = bbox[0]
-        x_min_bound, y_min_bound, x_max_bound, y_max_bound = bbox[1]
-        mask = torch.zeros_like(z_source)
+        x_min_int, y_min_int, x_max_int, y_max_int = bbox
+        mask = torch.ones_like(z_source)  # 기본값을 1로 초기화
+
+        for other_bbox in bboxes_int:
+            if other_bbox == bbox or other_bbox == [0, 0, 64, 64]:
+                continue
+
+            xA, yA, xB, yB, max_index = calculate_intersection(bbox, other_bbox)
+            if xA >= xB or yA >= yB:
+                ox_min, oy_min, ox_max, oy_max = other_bbox[0]
+                mask[:, :, oy_min:oy_max, ox_min:ox_max] = 0
+            else:
+                if max_index == 1:
+                    mask[:, :, yA:yB, xA:xB] = 0.3
+
         if i == len(bboxes_int) - 1:
             stacked_masks = torch.stack(masks)
             mask = torch.any(stacked_masks, dim=0)
-        else: 
-            y_grid, x_grid = np.meshgrid(np.arange(y_min_bound, y_max_bound), np.arange(x_min_bound, x_max_bound), indexing='ij')
-            dx = np.maximum(np.maximum(x_min - x_grid, 0), np.maximum(x_grid - x_max, 0))
-            dy = np.maximum(np.maximum(y_min - y_grid, 0), np.maximum(y_grid - y_max, 0))
-            dist = np.sqrt(dx**2 + dy**2)
-            gaussian = np.exp(-(dist**2) / (2 * sigma**2)) #box 안쪽은 1, boundary부터 바깥쪽으로 갈수록 작아지게
-            gaussian_torch = torch.from_numpy(gaussian).to(device=mask.device, dtype=mask.dtype)
-
-            mask[:,:,y_min_bound:y_max_bound, x_min_bound:x_max_bound] = gaussian_torch
-            mask = torch.clamp(mask, 0.0, 1.0)
-
-            for other_bbox in bboxes_int:
-                if other_bbox[0] == bbox[0] or other_bbox[0] == [0, 0, 64, 64]:
-                    continue
-                xA,yA,xB,yB,max_index = calculate_intersection(bbox[0], other_bbox[0])
-                if max_index == 1: #if other box ratio is higher
-                    mask[:,:,yA:yB, xA:xB] = 0.3
 
         masks.append(mask)
     ################################################################
@@ -362,7 +352,7 @@ def image_optimization(pipeline: StableDiffusionPipeline, image: np.ndarray, tex
             embedding_source = torch.stack([embedding_null, embedding_text], dim=1)
             embedding_target = torch.stack([embedding_null, embedding_text_target], dim=1)
 
-            grad, cutloss, _, timestep = dds_loss.get_dds_loss(z_source, z_taregt, embedding_source, embedding_target, bbox_i[1], mask, CDS_flag = CDS_flag,reweight_flag = reweight_flag)
+            grad, cutloss, _, timestep = dds_loss.get_dds_loss(z_source, z_taregt, embedding_source, embedding_target, bbox_i, mask, CDS_flag = CDS_flag,reweight_flag = reweight_flag)
             if isinstance(beta, list):
                 time_section = torch.div(timestep, 200, rounding_mode='floor')#int(timestep//200)
                 beta_t = beta[time_section]
