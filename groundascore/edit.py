@@ -394,11 +394,11 @@ def image_optimization(pipeline: StableDiffusionPipeline, image: np.ndarray, tex
             # Update parameters based on total accumulated gradients
             optimizer.step()
         if (i + 1) % 100 == 0:
-            out = decode(z_taregt, pipeline, size=im_size, crop_info=crop_info)
+            out = decode(z_taregt, pipeline)
             out = crop_resize(out, im_size, new_size, crop_info)
             out.save(os.path.join(output_dir, f"{image_name}_gen{i+1}.jpg"),"JPEG")
             del out
-    out = decode(z_taregt, pipeline, size=im_size, crop_info=crop_info)
+    out = decode(z_taregt, pipeline)
     out = crop_resize(out, im_size, new_size, crop_info)
     out.save(os.path.join(output_dir, f"{image_name}_result.jpg"),"JPEG")
     del out
