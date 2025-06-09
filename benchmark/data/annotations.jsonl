@@ -7,12 +7,9 @@
 {"image_path": "./data/images\\000000006954.jpg", "image_id": "000000006954_01", "original_image_id": "000000006954", "bbox_number": 1, "text": "leftmost child", "bbox": [8, 100, 154, 353]}
 {"image_path": "./data/images\\000000006954.jpg", "image_id": "000000006954_02", "original_image_id": "000000006954", "bbox_number": 2, "text": "center child", "bbox": [249, 116, 112, 274]}
 {"image_path": "./data/images\\000000006954.jpg", "image_id": "000000006954_03", "original_image_id": "000000006954", "bbox_number": 3, "text": "rightmost child", "bbox": [444, 120, 190, 281]}
-{"image_path": "./data/images\\000000015278.jpg", "image_id": "000000015278_01", "original_image_id": "000000015278", "bbox_number": 1, "text": "leftmost broccoli", "bbox": [19, 262, 178, 197]}
-{"image_path": "./data/images\\000000015278.jpg", "image_id": "000000015278_02", "original_image_id": "000000015278", "bbox_number": 2, "text": "center broccoli", "bbox": [327, 224, 168, 253]}
-{"image_path": "./data/images\\000000015278.jpg", "image_id": "000000015278_03", "original_image_id": "000000015278", "bbox_number": 3, "text": "rightmost broccoli", "bbox": [436, 199, 146, 199]}
-{"image_path": "./data/images\\000000029675.jpg", "image_id": "000000029675_01", "original_image_id": "000000029675", "bbox_number": 1, "text": "leftmost hotdog", "bbox": [14, 161, 357, 131]}
-{"image_path": "./data/images\\000000029675.jpg", "image_id": "000000029675_02", "original_image_id": "000000029675", "bbox_number": 2, "text": "center hotdog", "bbox": [104, 225, 269, 248]}
-{"image_path": "./data/images\\000000029675.jpg", "image_id": "000000029675_03", "original_image_id": "000000029675", "bbox_number": 3, "text": "rightmost hotdog", "bbox": [176, 330, 267, 310]}
+{"image_path": "./data/images\\000000029675.jpg", "image_id": "000000029675_01", "original_image_id": "000000029675", "bbox_number": 1, "text": "top hotdog", "bbox": [14, 161, 357, 131]}
+{"image_path": "./data/images\\000000029675.jpg", "image_id": "000000029675_02", "original_image_id": "000000029675", "bbox_number": 2, "text": "middle hotdog", "bbox": [104, 225, 269, 248]}
+{"image_path": "./data/images\\000000029675.jpg", "image_id": "000000029675_03", "original_image_id": "000000029675", "bbox_number": 3, "text": "bottommost hotdog", "bbox": [176, 330, 267, 310]}
 {"image_path": "./data/images\\000000032901.jpg", "image_id": "000000032901_01", "original_image_id": "000000032901", "bbox_number": 1, "text": "leftmost man", "bbox": [27, 87, 193, 459]}
 {"image_path": "./data/images\\000000032901.jpg", "image_id": "000000032901_02", "original_image_id": "000000032901", "bbox_number": 2, "text": "center man", "bbox": [212, 132, 129, 414]}
 {"image_path": "./data/images\\000000032901.jpg", "image_id": "000000032901_03", "original_image_id": "000000032901", "bbox_number": 3, "text": "rightmost man", "bbox": [425, 96, 184, 444]}
@@ -22,9 +19,6 @@
 {"image_path": "./data/images\\000000042296.jpg", "image_id": "000000042296_01", "original_image_id": "000000042296", "bbox_number": 1, "text": "leftmost ball", "bbox": [7, 252, 91, 125]}
 {"image_path": "./data/images\\000000042296.jpg", "image_id": "000000042296_02", "original_image_id": "000000042296", "bbox_number": 2, "text": "center ball", "bbox": [90, 265, 120, 110]}
 {"image_path": "./data/images\\000000042296.jpg", "image_id": "000000042296_03", "original_image_id": "000000042296", "bbox_number": 3, "text": "rightmost ball", "bbox": [183, 207, 141, 142]}
-{"image_path": "./data/images\\000000128598.jpg", "image_id": "000000128598_01", "original_image_id": "000000128598", "bbox_number": 1, "text": "leftmost potato", "bbox": [12, 200, 208, 231]}
-{"image_path": "./data/images\\000000128598.jpg", "image_id": "000000128598_02", "original_image_id": "000000128598", "bbox_number": 2, "text": "center potato", "bbox": [32, 439, 211, 201]}
-{"image_path": "./data/images\\000000128598.jpg", "image_id": "000000128598_03", "original_image_id": "000000128598", "bbox_number": 3, "text": "rightmost potato", "bbox": [235, 453, 228, 187]}
 {"image_path": "./data/images\\000000148957.jpg", "image_id": "000000148957_01", "original_image_id": "000000148957", "bbox_number": 1, "text": "leftmost donut", "bbox": [44, 276, 218, 180]}
 {"image_path": "./data/images\\000000148957.jpg", "image_id": "000000148957_02", "original_image_id": "000000148957", "bbox_number": 2, "text": "center donut", "bbox": [244, 210, 203, 184]}
 {"image_path": "./data/images\\000000148957.jpg", "image_id": "000000148957_03", "original_image_id": "000000148957", "bbox_number": 3, "text": "rightmost donut", "bbox": [434, 226, 198, 214]}
@@ -74,7 +68,7 @@
 {"image_path": "./benchmark/data/yoon/COCO_train2014_000000330607.jpg", "image_id": "COCO_train2014_000000330607_02", "original_image_id": "COCO_train2014_000000330607", "bbox_number": 2, "text": "milk behind hand", "bbox": [278, 294, 0, 0]}
 {"image_path": "./benchmark/data/yoon/COCO_train2014_000000330607.jpg", "image_id": "COCO_train2014_000000330607_03", "original_image_id": "COCO_train2014_000000330607", "bbox_number": 3, "text": "milk by the hand", "bbox": [189, 180, 110, 179]}
 {"image_path": "./benchmark/data/yoon/COCO_train2014_000000444799.jpg", "image_id": "COCO_train2014_000000444799_01", "original_image_id": "COCO_train2014_000000444799", "bbox_number": 1, "text": "second row guy with his mouth open above 3 with frisbee", "bbox": [186, 124, 133, 195]}
-{"image_path": "./benchmark/data/yoon/COCO_train2014_000000444799.jpg", "image_id": "COCO_train2014_000000444799_02", "original_image_id": "COCO_train2014_000000444799", "bbox_number": 2, "text": "the third from the right in the second row\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[Dc", "bbox": [299, 160, 117, 209]}
+{"image_path": "./benchmark/data/yoon/COCO_train2014_000000444799.jpg", "image_id": "COCO_train2014_000000444799_02", "original_image_id": "COCO_train2014_000000444799", "bbox_number": 2, "text": "the third from the right in the second row", "bbox": [299, 160, 117, 209]}
 {"image_path": "./benchmark/data/yoon/COCO_train2014_000000444799.jpg", "image_id": "COCO_train2014_000000444799_03", "original_image_id": "COCO_train2014_000000444799", "bbox_number": 3, "text": "leftmost standing guy", "bbox": [7, 22, 108, 212]}
 {"image_path": "./benchmark/data/yoon/COCO_train2014_000000516432.jpg", "image_id": "COCO_train2014_000000516432_01", "original_image_id": "COCO_train2014_000000516432", "bbox_number": 1, "text": "upper red teddy bear", "bbox": [179, 158, 137, 162]}
 {"image_path": "./benchmark/data/yoon/COCO_train2014_000000516432.jpg", "image_id": "COCO_train2014_000000516432_02", "original_image_id": "COCO_train2014_000000516432", "bbox_number": 2, "text": "dark blue teddy next to light blue", "bbox": [51, 167, 117, 181]}

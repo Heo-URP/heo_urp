@@ -59,7 +59,7 @@ def load_and_encode(image_path: str, left=0, right=0, top=0, bottom=0):
 
 RETRY_LIMIT = 20
 
-def full_pipe(image_path, responses, output_dir = None):
+def full_pipe(image_path, responses, output_dir = None, test = False):
 
     # Getting the base64 string
     base64_image = load_and_encode(image_path)
@@ -156,6 +156,9 @@ def full_pipe(image_path, responses, output_dir = None):
         bbox.append([0,0,1,1])
         main(source_sentence, target_sentence,image_path,num_iters = 500,beta = beta, 
             bbox = bbox, output_dir=output_dir,cutloss_flag = preserve_form)
+        
+        if test:
+            return bbox[:-1]
         
 
       except Exception as e:

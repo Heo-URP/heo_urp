@@ -1,0 +1,110 @@
+image_path,transform
+000000000776.jpg,Transform the leftmost teddy bear into pink teddy bear and Transform the center teddy bear into black teddy bear and Transform the rightmost teddy bear into white teddy bear
+000000005992.jpg,Transform the leftmost sheep into a brown cow and Transform the center sheep into a calf and Transform the rightmost sheep into background
+000000006954.jpg,Transform the leftmost child into child holding frisbee and Transform the center child into child wearing green t-shirt and Transform the rightmost child into smiling child
+000000029675.jpg,Transform the top hotdog into hotdog with ketchup and Transform the middle hotdog into taco and Transform the bottommost hotdog into burrito
+000000032901.jpg,Transform the leftmost man into man wearing black tie and Transform the center man into man with black hair and Transform the rightmost man into asian
+000000041990.jpg,Transform the leftmost human into wearing blue jacket and Transform the center human into wearing goggles and Transform the rightmost human into laughing
+000000042296.jpg,Transform the leftmost ball into blue ball and Transform the center ball into basketball and Transform the rightmost ball into red ball
+000000148957.jpg,Transform the leftmost donut into object and Transform the center donut into creature and Transform the rightmost donut into monster
+000000181753.jpg,Transform the leftmost chair into creature and Transform the center chair into monster and Transform the rightmost chair into alien
+000000185409.jpg,Transform the leftmost zebra into creature and Transform the center zebra into alien and Transform the rightmost zebra into monster
+000000217948.jpg,Transform the leftmost bear into teddy bear and Transform the center bear into grizzly bear and Transform the rightmost bear into panda
+000000242060.jpg,Transform the leftmost bread into creature and Transform the center bread into object and Transform the rightmost bread into alien
+000000290592.jpg,Transform the leftmost goat into monster and Transform the center goat into alien and Transform the rightmost goat into toy
+000000322211.jpg,Transform the leftmost donut into alien and Transform the center donut into toy and Transform the rightmost donut into creature
+000000343561.jpg,Transform the leftmost cycler into toy and Transform the center cycler into monster and Transform the rightmost cycler into creature
+000000369370.jpg,Transform the leftmost sandwich into object and Transform the center sandwich into alien and Transform the rightmost sandwich into monster
+000000371472.jpg,Transform the leftmost pineapple into object and Transform the center pineapple into toy and Transform the rightmost pineapple into alien
+000000397354.jpg,Transform the leftmost human into object and Transform the center human into alien and Transform the rightmost human into toy
+000000398377.jpg,Transform the leftmost human into creature and Transform the center human into toy and Transform the rightmost human into monster
+000000402720.jpg,Transform the leftmost human into creature and Transform the center human into monster and Transform the rightmost human into object
+000000402992.jpg,Transform the leftmost cow into creature and Transform the center cow into monster and Transform the rightmost cow into toy
+000000406570.jpg,Transform the leftmost apple into creature and Transform the center apple into alien and Transform the rightmost apple into toy
+COCO_train2014_000000330607.jpg,Transform the highest milk that is almost empty into object and Transform the milk behind hand into monster and Transform the milk by the hand into alien
+COCO_train2014_000000444799.jpg,Transform the leftmost standing guy into monster and Transform the second row guy with his mouth open above 3 with frisbee into creature and Transform the the third from the right in the second row[D[D[D[D[D[D[D[D[D[D[D[D[D[Dc into object
+COCO_train2014_000000516432.jpg,Transform the upper red teddy bear into polar bear and Transform the dark blue teddy next to light blue into object and Transform the bottomist leftest bear into panda
+COCO_train2014_000000574599.jpg,Transform the closet sheep into lamb and Transform the sheep in the left bottom corner into object and Transform the sheep by edge and bike into alien
+COCO_train2014_000000575284.jpg,Transform the rightest man into creature and Transform the left surfer into toy and Transform the left man into object
+COCO_train2014_000000575294.jpg,Transform the cow on the left into alien and Transform the the cow closest to us into object and Transform the the closer cow into creature
+COCO_train2014_000000575421.jpg,Transform the closest pizza into creature and Transform the upper left pizza into monster and Transform the the farthest pizza into toy
+COCO_train2014_000000575594.jpg,Transform the left teddybear into monster and Transform the right bear into polar bear and Transform the bear on the right into creature
+COCO_train2014_000000575743.jpg,Transform the chair at 9 o clock into object and Transform the the third chair from the front into toy
+COCO_train2014_000000576157.jpg,Transform the leftmost elephant into object and Transform the small elephant far from mother into monster and Transform the middle elephant into creature
+COCO_train2014_000000576187.jpg,Transform the motorcycle closest to us into toy and Transform the right motorcycle into monster and Transform the motorcycle closer to us into creature
+COCO_train2014_000000576389.jpg,Transform the closest white wine into toy and Transform the closest and large glass into creature
+COCO_train2014_000000576736.jpg,Transform the small vase closest to us into toy and Transform the fartest black tall base into creature and Transform the vase in front side to small one into object
+COCO_train2014_000000577197.jpg,Transform the horse next to woman into object and Transform the left horse into monster and Transform the right horse into creature
+COCO_train2014_000000577808.jpg,Transform the highest sandwich into monster
+COCO_train2014_000000578063.jpg,Transform the sandwich close to beer into alien and Transform the sandwich half next to dessert into monster and Transform the left half sandwich into object
+COCO_train2014_000000578108.jpg,Transform the closest cat into object and Transform the lower cat into monster and Transform the cat behind into creature
+COCO_train2014_000000578128.jpg,Transform the number 2 man with yellow on shirt into monster and Transform the man by window into alien and Transform the man on the left into toy
+COCO_train2014_000000578154.jpg,Transform the sheep near grass on ground into monster and Transform the middle sheep into goat and Transform the sheep at 9 0 clock into creature
+COCO_train2014_000000578294.jpg,Transform the smallest vase on the left into toy and Transform the vase in the middle into monster and Transform the vase at 3 o clock into creature
+COCO_train2014_000000578459.jpg,Transform the woman in black tank next to red shirt into alien and Transform the shirtless kid in lower row into monster and Transform the red shirt man closer to us into creature
+COCO_train2014_000000578567.jpg,Transform the player closest to us into toy and Transform the right player into monster and Transform the left player into creature
+COCO_train2014_000000578702.jpg,Transform the broccoli in the center into creature and Transform the lowest broccoli into topiary and Transform the broccoli directly in the middle into object
+COCO_train2014_000000578734.jpg,Transform the highest leftmost lime into monster and Transform the limes near edge beneath half cut lime into object and Transform the second lime from the left in the lowest row into toy
+COCO_train2014_000000578875.jpg,Transform the giraffe riding into alien and Transform the giraffe more higher into toy and Transform the giraffe in the bottom into creature
+COCO_train2014_000000579057.jpg,Transform the rightmost fruit into object and Transform the orange above into alien and Transform the yellow fruit most under into creature
+COCO_train2014_000000579136.jpg,Transform the the one furthest away from the camera into creature and Transform the closer skiier into monster and Transform the left skiier into alien
+COCO_train2014_000000579186.jpg,Transform the couch furthest into creature and Transform the couch facing you into monster and Transform the nearest white chair or couch into toy
+COCO_train2014_000000579255.jpg,Transform the red chair closest to window into toy and Transform the red chair by window into alien and Transform the left chair closest to us into creature
+COCO_train2014_000000579299.jpg,Transform the farthest pizza into creature and Transform the pizza closest to you into toy and Transform the pizza in the back into alien
+COCO_train2014_000000579366.jpg,Transform the elephant facing us into alien and Transform the left elephant into toy and Transform the right elephant into monster
+COCO_train2014_000000579382.jpg,Transform the bike in the front into object and Transform the motorcycle behind the guy with the arm into alien
+COCO_train2014_000000579440.jpg,Transform the closest sitting person into zombie and Transform the man standing in the middle into creature and Transform the further woman sitting into alien
+COCO_train2014_000000579446.jpg,Transform the closest chair into alien and Transform the second chair from the right into creature and Transform the chair closest to you into monster
+COCO_train2014_000000579571.jpg,Transform the rightmost man into toy and Transform the second skiier from the left into object and Transform the man standing apart from group into alien
+COCO_train2014_000000579632.jpg,Transform the burger in corner into monster and Transform the burger closer to you into object and Transform the front right burger into toy
+COCO_train2014_000000579663.jpg,Transform the right upper kid in the corner of the table into toy
+COCO_train2014_000000579907.jpg,Transform the couch away from window into toy and Transform the couch by the window into creature and Transform the dark chair under white and black picture into alien
+COCO_train2014_000000580408.jpg,Transform the woman behind the other into toy and Transform the woman in front of the other into object
+COCO_train2014_000000580510.jpg,Transform the center positioned giraffe into creature and Transform the right giraffe into toy
+COCO_train2014_000000580541.jpg,Transform the spoon close to cup into creature and Transform the spoon farthest from the coffee cup into toy and Transform the spoon nearest to cup into monster
+COCO_train2014_000000580549.jpg,Transform the bus behind the other into monster and Transform the closest bus into alien and Transform the farther bus into object
+COCO_train2014_000000580579.jpg,Transform the donut on the right upper edge into object
+COCO_train2014_000000580600.jpg,Transform the left donut with sprinkles into alien and Transform the closest to us white donut has no sprinkles into toy
+COCO_train2014_000000581021.jpg,Transform the zebra partially hidden by closest zebra into alien and Transform the closest zebra into object
+COCO_train2014_000000581136.jpg,Transform the couch at 6 o clock into toy
+COCO_train2014_000000581199.jpg,Transform the pizza closest to us into object and Transform the smaller pizza background into alien
+COCO_train2014_000000581419.jpg,Transform the lowest row second from left clock into alien and Transform the left upper clock into monster and Transform the clock touching foot into object
+COCO_train2014_000000581446.jpg,Transform the man sitting in the back into alien and Transform the left player into monster and Transform the right player into toy
+COCO_train2014_000000581466.jpg,Transform the cow with butt facing us into alien
+COCO_train2014_000000581518.jpg,Transform the donut on the top into toy and Transform the the second donut from the top into object and Transform the the donut most under into monster
+COCO_train2014_000000581657.jpg,Transform the closest laptop into monster and Transform the middle laptop into object and Transform the laptop most far away from us into creature
+COCO_train2014_000000581686.jpg,Transform the left pigeon into object and Transform the right pigeon into creature
+COCO_train2014_000000581738.jpg,Transform the bus in front of others into object and Transform the red bus behind the other into creature and Transform the red bus that is blocked into monster
+COCO_train2014_000000581739.jpg,Transform the middle flower into object and Transform the right flower into alien and Transform the left flower into monster
+COCO_train2014_000000581766.jpg,Transform the urinal closest to the white pipe into monster and Transform the middle urinal into toy
+COCO_train2014_000000000154.jpg,Transform the closest zebra into monster and Transform the middle way zebra into creature and Transform the farthest zebra into object
+COCO_train2014_000000000312.jpg,Transform the elephant at 9 o clock into alien and Transform the middle way elephant into monster and Transform the smallest elephant into object and Transform the middle elephant on the right side into creature and Transform the elephant at 3 o clock into toy and Transform the elephant at the very back on the right side into alien
+COCO_train2014_000000001943.jpg,Transform the leftmost woman into object and Transform the girl holding bat into monster and Transform the woman in green shirt into alien and Transform the woman in white shirt and baseball glove into creature and Transform the woman on 9 o clock into toy
+COCO_train2014_000000002114.jpg,Transform the leftmost parasol into monster and Transform the second parasol into object and Transform the third parasol into toy and Transform the fourth parasol into creature
+COCO_train2014_000000002782.jpg,Transform the blue surfing board into object and Transform the green surfing board into alien and Transform the white surfing board into toy and Transform the yellow surfing board into monster and Transform the red surfing board into creature
+COCO_train2014_000000002964.jpg,Transform the leftmost bottle into toy and Transform the second bottle into alien and Transform the second bottle from the right into object and Transform the fourth bottle into monster
+COCO_train2014_000000003812.jpg,Transform the scissors on the left into object and Transform the middle scissors into creature and Transform the scissors on the rightside into monster
+COCO_train2014_000000004172.jpg,Transform the man at 8 o clock into monster and Transform the man standing at middle into object and Transform the man jumping at middle into toy and Transform the man standing at 4 o clock into alien
+COCO_train2014_000000004208.jpg,Transform the nearest elephant into object and Transform the middle elephant into creature and Transform the farthest elephant into alien
+COCO_train2014_000000004278.jpg,Transform the nearest elephant into monster and Transform the smallest elephant into toy and Transform the second nearest elephant into object and Transform the following elephant into creature
+COCO_train2014_000000004318.jpg,Transform the leftmost zebra into monster and Transform the sitting zebra into creature and Transform the standing zebra above sitting one into alien and Transform the second zebra into object and Transform the zebra behind fence into toy and Transform the zebra lying on far away behind into object
+COCO_train2014_000000004319.jpg,Transform the first giraffe into alien and Transform the second giraffe into monster and Transform the third giraffe into creature and Transform the fourth giraffe into toy
+COCO_train2014_000000005083.jpg,Transform the nearest man into alien and Transform the man between two men into monster and Transform the farthest man into creature
+COCO_train2014_000000005198.jpg,Transform the woman sitting at very back into monster and Transform the child in the womans arms into object and Transform the person with brown jacket into alien and Transform the kid sitting front into toy and Transform the man in tan jacket into creature
+COCO_train2014_000000005832.jpg,Transform the leftmost laptop into alien and Transform the laptop between two into monster and Transform the right laptop into creature
+COCO_train2014_000000005947.jpg,Transform the plane at center into object and Transform the plane at 1 o clock into creature and Transform the plane at 10 o clock into alien and Transform the plane at 8 o clock into monster
+COCO_train2014_000000005994.jpg,Transform the first danforth avenue sign into toy and Transform the second danforth avenue sign into alien and Transform the third danforth avenue sign into creature and Transform the fourth danforth avenue sign into object
+COCO_train2014_000000006336.jpg,Transform the sheep at center into monster and Transform the sheep on the rightside into toy and Transform the sheep at 8 o clock into object and Transform the farthest sheep into statue
+COCO_train2014_000000007220.jpg,Transform the plate on the center of the table into creature and Transform the plate on the left side of the table into monster
+COCO_train2014_000000007504.jpg,Transform the left clock into creature and Transform the middle clock into toy and Transform the right clock into alien
+COCO_train2014_000000007643.jpg,Transform the leftmost luggage into creature and Transform the rightmost luggage into toy and Transform the midleft luggage into object and Transform the midright luggage into alien
+COCO_train2014_000000008195.jpg,Transform the the toilet in the middle row center into alien and Transform the the toilet in the front right into creature and Transform the the toilet in the front left into toy and Transform the the toilet in the middle row furthest right into object and Transform the the toilet in the middle row furthest left into monster and Transform the the toilet in the back right into toy and Transform the the toilet in the back left into object
+COCO_train2014_000000008300.jpg,Transform the the giraffe on the far left into toy and Transform the the giraffe in the midleft into monster and Transform the the girrafe in the midright into alien and Transform the the farthest girrafe into creature
+COCO_train2014_000000008305.jpg,Transform the leftmost player into alien and Transform the center player into object and Transform the rightmost player into toy
+COCO_train2014_000000009127.jpg,Transform the the tallest vase into creature and Transform the the middle size vase into monster and Transform the the smallest vase into object
+COCO_train2014_000000009615.jpg,Transform the center police car into sports car and Transform the left police car into race car and Transform the right police car into truck
+COCO_train2014_000000010414.jpg,Transform the top right bowl into toy and Transform the top left bowl into alien and Transform the bottom left bowl into creature and Transform the bottom right bowl into monster
+COCO_train2014_000000010471.jpg,Transform the right elephant into alien and Transform the middle elephant into object and Transform the left elephant into toy
+COCO_train2014_000000010539.jpg,Transform the leading sheep into lamb and Transform the first following sheep into statue and Transform the second following sheep into goat and Transform the third following sheep into camel and Transform the fourth following sheep into alpaca and Transform the fifth following sheep into lamb
+COCO_train2014_000000011159.jpg,Transform the leftmost boy skateboarding into toy and Transform the rightmost boy skateboarding into object and Transform the mid left boy skateboarding into creature and Transform the mid right boy skateboarding into monster
+COCO_train2014_000000011569.jpg,Transform the front bus into object and Transform the middle bus into toy and Transform the behind bus into creature
