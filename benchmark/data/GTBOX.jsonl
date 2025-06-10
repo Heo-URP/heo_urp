@@ -22,48 +22,47 @@
 {"image_file": "000000402720.jpg", "ground_truth_boxes": [[0, 258, 193, 293], [240, 204, 163, 233], [381, 238, 231, 301]], "texts": ["leftmost human", "center human", "rightmost human"]}
 {"image_file": "000000402992.jpg", "ground_truth_boxes": [[20, 133, 282, 124], [155, 206, 290, 196], [420, 170, 167, 142]], "texts": ["leftmost cow", "center cow", "rightmost cow"]}
 {"image_file": "000000406570.jpg", "ground_truth_boxes": [[28, 251, 141, 153], [174, 278, 181, 153], [313, 496, 114, 144]], "texts": ["leftmost apple", "center apple", "rightmost apple"]}
-{"image_file": "COCO_train2014_000000330607.jpg", "ground_truth_boxes": [[98, 1, 123, 163], [278, 294, 0, 0], [189, 180, 110, 179]], "texts": ["highest milk that is almost empty", "milk behind hand", "milk by the hand"]}
-{"image_file": "COCO_train2014_000000444799.jpg", "ground_truth_boxes": [[7, 22, 108, 212], [186, 124, 133, 195], [299, 160, 117, 209]], "texts": ["leftmost standing guy", "second row guy with his mouth open above 3 with frisbee", "the third from the right in the second row\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[Dc"]}
+{"image_file": "COCO_train2014_000000330607.jpg", "ground_truth_boxes": [[98, 1, 123, 163], [189, 180, 110, 179]], "texts": ["highest milk that is almost empty", "milk by the hand"]}
+{"image_file": "COCO_train2014_000000444799.jpg", "ground_truth_boxes": [[7, 22, 108, 212], [186, 124, 133, 195], [299, 160, 117, 209]], "texts": ["leftmost standing guy", "second row guy with his mouth open above 3 with frisbee", "the third from the right in the second row"]}
 {"image_file": "COCO_train2014_000000516432.jpg", "ground_truth_boxes": [[179, 158, 137, 162], [51, 167, 117, 181], [44, 300, 119, 250]], "texts": ["upper red teddy bear", "dark blue teddy next to light blue", "bottomist leftest bear"]}
-{"image_file": "COCO_train2014_000000574599.jpg", "ground_truth_boxes": [[251, 271, 207, 153], [8, 224, 191, 157], [8, 225, 203, 152]], "texts": ["closet sheep", "sheep in the left bottom corner", "sheep by edge and bike"]}
-{"image_file": "COCO_train2014_000000575284.jpg", "ground_truth_boxes": [[395, 71, 178, 293], [92, 101, 227, 265], [95, 90, 216, 285]], "texts": ["rightest man", "left surfer", "left man"]}
-{"image_file": "COCO_train2014_000000575294.jpg", "ground_truth_boxes": [[42, 14, 211, 305], [322, 24, 316, 401], [328, 30, 311, 391]], "texts": ["cow on the left", "the cow closest to us", "the closer cow"]}
+{"image_file": "COCO_train2014_000000574599.jpg", "ground_truth_boxes": [[251, 271, 207, 153], [8, 224, 191, 157]], "texts": ["closet sheep", "sheep in the left bottom corner"]}
+{"image_file": "COCO_train2014_000000575284.jpg", "ground_truth_boxes": [[395, 71, 178, 293], [92, 101, 227, 265]], "texts": ["rightest man", "left surfer"]}
+{"image_file": "COCO_train2014_000000575294.jpg", "ground_truth_boxes": [[42, 14, 211, 305], [322, 24, 316, 401]], "texts": ["cow on the left", "the cow closest to us"]}
 {"image_file": "COCO_train2014_000000575421.jpg", "ground_truth_boxes": [[70, 279, 416, 199], [5, 96, 258, 161], [235, 31, 257, 145]], "texts": ["closest pizza", "upper left pizza", "the farthest pizza"]}
-{"image_file": "COCO_train2014_000000575594.jpg", "ground_truth_boxes": [[80, 73, 238, 255], [388, 73, 225, 267], [388, 78, 220, 266]], "texts": ["left teddybear", "right bear", "bear on the right"]}
+{"image_file": "COCO_train2014_000000575594.jpg", "ground_truth_boxes": [[80, 73, 238, 255], [388, 73, 225, 267]], "texts": ["left teddybear", "right bear"]}
 {"image_file": "COCO_train2014_000000575743.jpg", "ground_truth_boxes": [[3, 218, 176, 281], [47, 176, 102, 131]], "texts": ["chair at 9 o clock", "the third chair from the front"]}
 {"image_file": "COCO_train2014_000000576157.jpg", "ground_truth_boxes": [[18, 130, 314, 238], [341, 202, 146, 173], [254, 206, 113, 174]], "texts": ["leftmost elephant", "small elephant far from mother", "middle elephant"]}
-{"image_file": "COCO_train2014_000000576187.jpg", "ground_truth_boxes": [[54, 231, 210, 191], [468, 194, 147, 151], [58, 235, 219, 189]], "texts": ["motorcycle closest to us", "right motorcycle", "motorcycle closer to us"]}
+{"image_file": "COCO_train2014_000000576187.jpg", "ground_truth_boxes": [[468, 194, 147, 151], [58, 235, 219, 189]], "texts": ["right motorcycle", "motorcycle closer to us"]}
 {"image_file": "COCO_train2014_000000576389.jpg", "ground_truth_boxes": [[219, 120, 96, 224], [107, 15, 121, 321]], "texts": ["closest white wine", "closest and large glass"]}
-{"image_file": "COCO_train2014_000000576736.jpg", "ground_truth_boxes": [[220, 272, 88, 152], [488, 5, 147, 325], [319, 131, 196, 288]], "texts": ["small vase closest to us", "fartest black tall base", "vase in front side to small one"]}
-{"image_file": "COCO_train2014_000000577197.jpg", "ground_truth_boxes": [[457, 103, 173, 242], [38, 91, 222, 266], [453, 97, 183, 232]], "texts": ["horse next to woman", "left horse", "right horse"]}
-{"image_file": "COCO_train2014_000000577808.jpg", "ground_truth_boxes": [[50, 37, 404, 266]], "texts": ["highest sandwich"]}
-{"image_file": "COCO_train2014_000000578063.jpg", "ground_truth_boxes": [[211, 168, 134, 177], [337, 172, 154, 122], [220, 167, 126, 175]], "texts": ["sandwich close to beer", "sandwich half next to dessert", "left half sandwich"]}
-{"image_file": "COCO_train2014_000000578108.jpg", "ground_truth_boxes": [[119, 193, 375, 168], [116, 185, 365, 165], [149, 119, 291, 80]], "texts": ["closest cat", "lower cat", "cat behind"]}
+{"image_file": "COCO_train2014_000000576736.jpg", "ground_truth_boxes": [[220, 272, 88, 152], [488, 5, 147, 325], [319, 131, 196, 288]], "texts": ["small vase closest to us", "farthest black tall vase", "vase in front side to small one"]}
+{"image_file": "COCO_train2014_000000577197.jpg", "ground_truth_boxes": [[457, 103, 173, 242], [38, 91, 222, 266]], "texts": ["horse next to woman", "left horse"]}
+{"image_file": "COCO_train2014_000000577808.jpg", "ground_truth_boxes": [[305, 85, 269, 286], [50, 37, 404, 266]], "texts": ["sandwich under", "highest sandwich"]}
+{"image_file": "COCO_train2014_000000578063.jpg", "ground_truth_boxes": [[337, 172, 154, 122], [220, 167, 126, 175]], "texts": ["sandwich half next to dessert", "left half sandwich"]}
+{"image_file": "COCO_train2014_000000578108.jpg", "ground_truth_boxes": [[119, 193, 375, 168], [149, 119, 291, 80]], "texts": ["closest cat", "cat behind"]}
 {"image_file": "COCO_train2014_000000578128.jpg", "ground_truth_boxes": [[171, 80, 174, 248], [404, 110, 229, 283], [5, 70, 170, 304]], "texts": ["number 2 man with yellow on shirt", "man by window", "man on the left"]}
 {"image_file": "COCO_train2014_000000578154.jpg", "ground_truth_boxes": [[370, 148, 139, 244], [263, 131, 100, 273], [62, 104, 220, 282]], "texts": ["sheep near grass on ground", "middle sheep", "sheep at 9 0 clock"]}
 {"image_file": "COCO_train2014_000000578294.jpg", "ground_truth_boxes": [[23, 168, 171, 253], [224, 86, 175, 337], [435, 146, 179, 291]], "texts": ["smallest vase on the left", "vase in the middle", "vase at 3 o clock"]}
 {"image_file": "COCO_train2014_000000578459.jpg", "ground_truth_boxes": [[181, 3, 118, 184], [267, 260, 110, 213], [322, 66, 128, 163]], "texts": ["woman in black tank next to red shirt", "shirtless kid in lower row", "red shirt man closer to us"]}
-{"image_file": "COCO_train2014_000000578567.jpg", "ground_truth_boxes": [[99, 158, 191, 468], [486, 227, 118, 281], [103, 166, 177, 462]], "texts": ["player closest to us", "right player", "left player"]}
-{"image_file": "COCO_train2014_000000578702.jpg", "ground_truth_boxes": [[142, 296, 165, 148], [63, 453, 182, 168], [140, 280, 170, 157]], "texts": ["broccoli in the center", "lowest broccoli", "broccoli directly in the middle"]}
+{"image_file": "COCO_train2014_000000578567.jpg", "ground_truth_boxes": [[99, 158, 191, 468], [486, 227, 118, 281]], "texts": ["player closest to us", "right player"]}
+{"image_file": "COCO_train2014_000000578702.jpg", "ground_truth_boxes": [[142, 296, 165, 148], [63, 453, 182, 168]], "texts": ["broccoli in the center", "lowest broccoli"]}
 {"image_file": "COCO_train2014_000000578734.jpg", "ground_truth_boxes": [[8, 216, 104, 104], [391, 325, 86, 103], [98, 521, 109, 116]], "texts": ["highest leftmost lime", "limes near edge beneath half cut lime", "second lime from the left in the lowest row"]}
-{"image_file": "COCO_train2014_000000578875.jpg", "ground_truth_boxes": [[55, 6, 114, 225], [54, 8, 115, 204], [13, 57, 221, 377]], "texts": ["giraffe riding", "giraffe more higher", "giraffe in the bottom"]}
+{"image_file": "COCO_train2014_000000578875.jpg", "ground_truth_boxes": [[55, 6, 114, 225], [13, 57, 221, 377]], "texts": ["giraffe riding", "giraffe in the bottom"]}
 {"image_file": "COCO_train2014_000000579057.jpg", "ground_truth_boxes": [[226, 282, 193, 211], [84, 286, 150, 140], [262, 481, 157, 150]], "texts": ["rightmost fruit", "orange above", "yellow fruit most under"]}
-{"image_file": "COCO_train2014_000000579136.jpg", "ground_truth_boxes": [[351, 98, 175, 233], [149, 89, 176, 324], [147, 86, 171, 326]], "texts": ["the one furthest away from the camera", "closer skiier", "left skiier"]}
-{"image_file": "COCO_train2014_000000579186.jpg", "ground_truth_boxes": [[322, 212, 239, 148], [323, 216, 238, 145], [1, 304, 214, 197]], "texts": ["couch furthest", "couch facing you", "nearest white chair or couch"]}
-{"image_file": "COCO_train2014_000000579255.jpg", "ground_truth_boxes": [[145, 212, 146, 132], [150, 212, 138, 120], [7, 239, 297, 232]], "texts": ["red chair closest to window", "red chair by window", "left chair closest to us"]}
-{"image_file": "COCO_train2014_000000579299.jpg", "ground_truth_boxes": [[146, 111, 348, 91], [23, 260, 568, 331], [153, 106, 335, 104]], "texts": ["farthest pizza", "pizza closest to you", "pizza in the back"]}
-{"image_file": "COCO_train2014_000000579366.jpg", "ground_truth_boxes": [[279, 69, 123, 211], [165, 150, 136, 121], [281, 70, 126, 209]], "texts": ["elephant facing us", "left elephant", "right elephant"]}
+{"image_file": "COCO_train2014_000000579136.jpg", "ground_truth_boxes": [[351, 98, 175, 233], [149, 89, 176, 324]], "texts": ["the one furthest away from the camera", "closer skiier"]}
+{"image_file": "COCO_train2014_000000579186.jpg", "ground_truth_boxes": [[322, 212, 239, 148], [1, 304, 214, 197]], "texts": ["couch furthest", "nearest white chair or couch"]}
+{"image_file": "COCO_train2014_000000579255.jpg", "ground_truth_boxes": [[150, 212, 138, 120], [7, 239, 297, 232]], "texts": ["red chair by window", "left chair closest to us"]}
+{"image_file": "COCO_train2014_000000579299.jpg", "ground_truth_boxes": [[23, 260, 568, 331], [153, 106, 335, 104]], "texts": ["pizza closest to you", "pizza in the back"]}
+{"image_file": "COCO_train2014_000000579366.jpg", "ground_truth_boxes": [[279, 69, 123, 211], [165, 150, 136, 121]], "texts": ["elephant facing us", "left elephant"]}
 {"image_file": "COCO_train2014_000000579382.jpg", "ground_truth_boxes": [[44, 17, 274, 617], [258, 59, 200, 333]], "texts": ["bike in the front", "motorcycle behind the guy with the arm"]}
 {"image_file": "COCO_train2014_000000579440.jpg", "ground_truth_boxes": [[77, 86, 253, 266], [302, 21, 138, 317], [425, 162, 80, 152]], "texts": ["closest sitting person", "man standing in the middle", "further woman sitting"]}
-{"image_file": "COCO_train2014_000000579446.jpg", "ground_truth_boxes": [[173, 490, 205, 147], [101, 439, 146, 187], [175, 494, 211, 143]], "texts": ["closest chair", "second chair from the right", "chair closest to you"]}
+{"image_file": "COCO_train2014_000000579446.jpg", "ground_truth_boxes": [[173, 490, 205, 147], [101, 439, 146, 187]], "texts": ["closest chair", "second chair from the right"]}
 {"image_file": "COCO_train2014_000000579571.jpg", "ground_truth_boxes": [[349, 122, 95, 248], [198, 141, 60, 186], [86, 100, 86, 268]], "texts": ["rightmost man", "second skiier from the left", "man standing apart from group"]}
-{"image_file": "COCO_train2014_000000579632.jpg", "ground_truth_boxes": [[5, 1, 254, 277], [184, 0, 417, 291], [190, 0, 417, 294]], "texts": ["burger in corner", "burger closer to you", "front right burger"]}
-{"image_file": "COCO_train2014_000000579663.jpg", "ground_truth_boxes": [[392, 87, 103, 142]], "texts": ["right upper kid in the corner of the table"]}
-{"image_file": "COCO_train2014_000000579907.jpg", "ground_truth_boxes": [[8, 245, 202, 148], [437, 245, 200, 201], [6, 244, 206, 160]], "texts": ["couch away from window", "couch by the window", "dark chair under white and black picture"]}
+{"image_file": "COCO_train2014_000000579632.jpg", "ground_truth_boxes": [[5, 1, 254, 277], [190, 0, 417, 294]], "texts": ["burger in the back", "front right burger"]}
+{"image_file": "COCO_train2014_000000579907.jpg", "ground_truth_boxes": [[8, 245, 202, 148], [437, 245, 200, 201]], "texts": ["couch away from window", "couch by the window"]}
 {"image_file": "COCO_train2014_000000580408.jpg", "ground_truth_boxes": [[61, 66, 239, 572], [220, 163, 255, 476]], "texts": ["woman behind the other", "woman in front of the other"]}
 {"image_file": "COCO_train2014_000000580510.jpg", "ground_truth_boxes": [[195, 83, 283, 330], [414, 29, 212, 386]], "texts": ["center positioned giraffe", "right giraffe"]}
-{"image_file": "COCO_train2014_000000580541.jpg", "ground_truth_boxes": [[8, 186, 208, 112], [14, 373, 376, 261], [9, 182, 198, 113]], "texts": ["spoon close to cup", "spoon farthest from the coffee cup", "spoon nearest to cup"]}
-{"image_file": "COCO_train2014_000000580549.jpg", "ground_truth_boxes": [[24, 189, 132, 139], [158, 190, 452, 160], [24, 194, 123, 143]], "texts": ["bus behind the other", "closest bus", "farther bus"]}
+{"image_file": "COCO_train2014_000000580541.jpg", "ground_truth_boxes": [[8, 186, 208, 112], [14, 373, 376, 261]], "texts": ["spoon close to cup", "spoon farthest from the coffee cup"]}
+{"image_file": "COCO_train2014_000000580549.jpg", "ground_truth_boxes": [[24, 189, 132, 139], [158, 190, 452, 160]], "texts": ["bus behind the other", "closest bus"]}
 {"image_file": "COCO_train2014_000000580579.jpg", "ground_truth_boxes": [[474, 160, 140, 97]], "texts": ["donut on the right upper edge"]}
 {"image_file": "COCO_train2014_000000580600.jpg", "ground_truth_boxes": [[9, 168, 248, 213], [111, 303, 339, 174]], "texts": ["left donut with sprinkles", "closest to us white donut has no sprinkles"]}
 {"image_file": "COCO_train2014_000000581021.jpg", "ground_truth_boxes": [[385, 109, 178, 169], [188, 96, 249, 207]], "texts": ["zebra partially hidden by closest zebra", "closest zebra"]}
@@ -75,7 +74,7 @@
 {"image_file": "COCO_train2014_000000581518.jpg", "ground_truth_boxes": [[108, 22, 233, 133], [91, 149, 250, 112], [98, 340, 231, 117]], "texts": ["donut on the top", "the second donut from the top", "the donut most under"]}
 {"image_file": "COCO_train2014_000000581657.jpg", "ground_truth_boxes": [[6, 142, 307, 462], [225, 207, 245, 169], [326, 172, 148, 126]], "texts": ["closest laptop", "middle laptop", "laptop most far away from us"]}
 {"image_file": "COCO_train2014_000000581686.jpg", "ground_truth_boxes": [[293, 266, 112, 156], [402, 249, 193, 171]], "texts": ["left pigeon", "right pigeon"]}
-{"image_file": "COCO_train2014_000000581738.jpg", "ground_truth_boxes": [[186, 147, 390, 163], [12, 153, 175, 141], [23, 154, 170, 140]], "texts": ["bus in front of others", "red bus behind the other", "red bus that is blocked"]}
+{"image_file": "COCO_train2014_000000581738.jpg", "ground_truth_boxes": [[186, 147, 390, 163], [12, 153, 175, 141]], "texts": ["bus in front of others", "red bus behind the other"]}
 {"image_file": "COCO_train2014_000000581739.jpg", "ground_truth_boxes": [[241, 123, 108, 303], [391, 17, 86, 418], [163, 42, 86, 387]], "texts": ["middle flower", "right flower", "left flower"]}
 {"image_file": "COCO_train2014_000000581766.jpg", "ground_truth_boxes": [[18, 97, 114, 189], [195, 77, 112, 221]], "texts": ["urinal closest to the white pipe", "middle urinal"]}
 {"image_file": "COCO_train2014_000000000154.jpg", "ground_truth_boxes": [[15, 313, 350, 327], [34, 195, 284, 142], [233, 90, 108, 66]], "texts": ["closest zebra", "middle way zebra", "farthest zebra"]}
