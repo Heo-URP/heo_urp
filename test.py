@@ -12,6 +12,7 @@ import json
 def run_test(input_csv, image_dir, output_dir, test_flag=False):
 
     if test_flag:
+        output_dir.mkdir(parents=True, exist_ok=True)
         jsonl_path = output_dir / "predictions.jsonl"
         jsonl_file = open(jsonl_path, "w")
     else:
