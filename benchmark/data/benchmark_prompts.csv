@@ -1,26 +1,26 @@
 image_path,transform
-000000000776.jpg,Transform the leftmost teddy bear into pink teddy bear and Transform the center teddy bear into black teddy bear and Transform the rightmost teddy bear into white teddy bear
-000000005992.jpg,Transform the leftmost sheep into a brown cow and Transform the center sheep into a calf and Transform the rightmost sheep into background
-000000006954.jpg,Transform the leftmost child into child holding frisbee and Transform the center child into child wearing green t-shirt and Transform the rightmost child into smiling child
-000000029675.jpg,Transform the top hotdog into hotdog with ketchup and Transform the middle hotdog into taco and Transform the bottommost hotdog into burrito
-000000032901.jpg,Transform the leftmost man into man wearing black tie and Transform the center man into man with black hair and Transform the rightmost man into asian
-000000041990.jpg,Transform the leftmost human into wearing blue jacket and Transform the center human into wearing goggles and Transform the rightmost human into laughing
-000000042296.jpg,Transform the leftmost ball into blue ball and Transform the center ball into basketball and Transform the rightmost ball into red ball
-000000148957.jpg,Transform the leftmost donut into object and Transform the center donut into creature and Transform the rightmost donut into monster
-000000181753.jpg,Transform the leftmost chair into creature and Transform the center chair into monster and Transform the rightmost chair into alien
-000000185409.jpg,Transform the leftmost zebra into creature and Transform the center zebra into alien and Transform the rightmost zebra into monster
-000000217948.jpg,Transform the leftmost bear into teddy bear and Transform the center bear into grizzly bear and Transform the rightmost bear into panda
-000000242060.jpg,Transform the leftmost bread into creature and Transform the center bread into object and Transform the rightmost bread into alien
-000000290592.jpg,Transform the leftmost goat into monster and Transform the center goat into alien and Transform the rightmost goat into toy
-000000322211.jpg,Transform the leftmost donut into alien and Transform the center donut into toy and Transform the rightmost donut into creature
-000000343561.jpg,Transform the leftmost cycler into toy and Transform the center cycler into monster and Transform the rightmost cycler into creature
-000000369370.jpg,Transform the leftmost sandwich into object and Transform the center sandwich into alien and Transform the rightmost sandwich into monster
-000000371472.jpg,Transform the leftmost pineapple into object and Transform the center pineapple into toy and Transform the rightmost pineapple into alien
-000000397354.jpg,Transform the leftmost human into object and Transform the center human into alien and Transform the rightmost human into toy
-000000398377.jpg,Transform the leftmost human into creature and Transform the center human into toy and Transform the rightmost human into monster
-000000402720.jpg,Transform the leftmost human into creature and Transform the center human into monster and Transform the rightmost human into object
-000000402992.jpg,Transform the leftmost cow into creature and Transform the center cow into monster and Transform the rightmost cow into toy
-000000406570.jpg,Transform the leftmost apple into creature and Transform the center apple into alien and Transform the rightmost apple into toy
+000000000776.jpg,	Transform the leftmost teddy bear into pink teddy bear and Transform the center teddy bear into black teddy bear and Transform the rightmost teddy bear into white teddy bear
+000000005992.jpg,	Transform the leftmost sheep into a brown cow and Transform the center sheep into a calf and Transform the rightmost sheep into background
+000000006954.jpg,	Transform the leftmost child into child holding frisbee and Transform the center child into child wearing green t-shirt and Transform the rightmost child into smiling child
+000000029675.jpg,	Transform the top hotdog into hotdog with ketchup and Transform the middle hotdog into taco and Transform the bottommost hotdog into burrito
+000000032901.jpg,	Transform the leftmost man into man wearing black tie and Transform the center man into man with black hair and Transform the rightmost man into asian
+000000041990.jpg,	Transform the leftmost human into wearing blue jacket and Transform the center human into wearing goggles and Transform the rightmost human into laughing
+000000042296.jpg,	Transform the leftmost ball into blue ball and Transform the center ball into basketball and Transform the rightmost ball into red ball
+000000148957.jpg,	Transform the leftmost donut into carrot and Transform the center donut into orange and Transform the rightmost donut into book
+000000181753.jpg,	Transform the leftmost chair into computer and Transform the center chair into backpack and Transform the rightmost chair into sofa
+000000185409.jpg,	Transform the leftmost zebra into lion and Transform the center zebra into horse and Transform the rightmost zebra into goat
+000000217948.jpg,	Transform the leftmost bear into teddy bear and Transform the center bear into grizzly bear and Transform the rightmost bear into panda
+000000242060.jpg,	Transform the leftmost bread into orange and Transform the center bread into carrot and Transform the rightmost bread into onion
+000000290592.jpg,	Transform the leftmost goat into zebra and Transform the center goat into lion and Transform the rightmost goat into horse
+000000322211.jpg,	Transform the leftmost donut into carrot and Transform the center donut into banana and Transform the rightmost donut into orange
+000000343561.jpg,	Transform the leftmost cycler into runner and Transform the center cycler into child wearing green t-shirt and Transform the rightmost cycler into child holding frisbee
+000000369370.jpg,	Transform the leftmost sandwich into carrot and Transform the center sandwich into donut and Transform the rightmost sandwich into taco
+000000371472.jpg,	Transform the leftmost pineapple into carrot and Transform the center pineapple into strawberry and Transform the rightmost pineapple into banana
+000000397354.jpg,	Transform the leftmost human into child wearing green t-shirt and Transform the center human into child holding frisbee and Transform the rightmost human into smiling child
+000000398377.jpg,	Transform the leftmost human into child wearing green t-shirt and Transform the center human into child holding frisbee and Transform the rightmost human into smiling child
+000000402720.jpg,	Transform the leftmost human into child wearing green t-shirt and Transform the center human into child holding frisbee and Transform the rightmost human into smiling child
+000000402992.jpg,	Transform the leftmost cow into zebra and Transform the center cow into horse and Transform the rightmost cow into goat
+000000406570.jpg,	Transform the leftmost apple into orange and Transform the center apple into banana and Transform the rightmost apple into onion
 COCO_train2014_000000330607.jpg,Transform the highest milk that is almost empty into orange juice and Transform the milk by the hand into full glass of water
 COCO_train2014_000000444799.jpg,Transform the leftmost standing guy into wearing green cap and Transform the second row guy with his mouth open above 3 with frisbee into throwing his hands up in the air and Transform the the third from the right in the second row into black hair
 COCO_train2014_000000516432.jpg,Transform the upper red teddybear into brown teddybear and Transform the dark blue teddy next to light blue into teddy with no check pattern and Transform the bottomist leftest bear into teddy with dot pattern 
