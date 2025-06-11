@@ -1,0 +1,126 @@
+import json
+import os
+from PIL import Image
+import torch
+import clip
+
+
+def compute_iou(boxA, boxB):
+    """
+    Compute Intersection over Union (IoU) of two bounding boxes.
+    Boxes are in [x_min, y_min, x_max, y_max] format.
+    """
+    xA = max(boxA[0], boxB[0])
+    yA = max(boxA[1], boxB[1])
+    xB = min(boxA[2], boxB[2])
+    yB = min(boxA[3], boxB[3])
+
+    inter_width = max(0, xB - xA)
+    inter_height = max(0, yB - yA)
+    inter_area = inter_width * inter_height
+
+    boxA_area = (boxA[2] - boxA[0]) * (boxA[3] - boxA[1])
+    boxB_area = (boxB[2] - boxB[0]) * (boxB[3] - boxB[1])
+
+    union_area = boxA_area + boxB_area - inter_area
+    if union_area == 0:
+        return 0.0
+    return inter_area / union_area
+
+
+def compute_iou_per_image(gt_boxes, pred_boxes):
+    """
+    Given lists of ground-truth and predicted boxes for one image,
+    compute IoU for each matched pair (ordered) and return a list of IoUs.
+    """
+    assert len(gt_boxes) == len(pred_boxes), \
+        "GT and prediction must have same number of boxes"
+    return [compute_iou(gt, pred) for gt, pred in zip(gt_boxes, pred_boxes)]
+
+
+def compute_clip_scores(image_path, pred_boxes, texts, model_name="ViT-B/32", device=None):
+    """
+    Given an image path, list of predicted boxes, and corresponding texts,
+    compute CLIP cosine similarity scores for each cropped region vs text.
+    Returns a list of floats.
+    """
+    if device is None:
+        device = "cuda" if torch.cuda.is_available() else "cpu"
+    # Load CLIP model
+    model, preprocess = clip.load(model_name, device=device)
+    model.eval()
+
+    # Open image
+    image = Image.open(image_path).convert("RGB")
+
+    # Preprocess each crop
+    crops = []
+    for box in pred_boxes:
+        crop = image.crop(box)
+        crops.append(preprocess(crop).unsqueeze(0))
+    image_input = torch.cat(crops, dim=0).to(device)
+
+    # Tokenize texts
+    text_input = clip.tokenize(texts).to(device)
+
+    # Encode features
+    with torch.no_grad():
+        image_features = model.encode_image(image_input)
+        text_features = model.encode_text(text_input)
+
+    # Normalize
+    image_features /= image_features.norm(dim=-1, keepdim=True)
+    text_features /= text_features.norm(dim=-1, keepdim=True)
+
+    # Compute cosine similarities
+    scores = (image_features * text_features).sum(dim=-1)
+    return scores.cpu().tolist()
+
+
+def main(gt_path, pred_path, image_dir):
+    """
+    Load ground-truth and prediction JSONL files, compute IoU and CLIP scores per image,
+    and print results.
+    JSONL format per line:
+      {"image_id": "image1.jpg", "boxes": [[x1,y1,x2,y2], ...], "texts": ["label1", ...]}
+    Predictions file format:
+      {"image_id": "image1.jpg", "boxes": [[x1,y1,x2,y2], ...]}
+    """
+    iou_results = {}
+    clip_results = {}
+
+    with open(gt_path, 'r') as f_gt, open(pred_path, 'r') as f_pred:
+        for gt_line, pred_line in zip(f_gt, f_pred):
+            gt = json.loads(gt_line)
+            pred = json.loads(pred_line)
+            image_id = gt['image_id']
+            gt_boxes = gt['boxes']
+            pred_boxes = pred['boxes']
+            texts = gt.get('texts', [])
+
+            # IoU
+            ious = compute_iou_per_image(gt_boxes, pred_boxes)
+            iou_results[image_id] = ious
+
+            # CLIP
+            img_path = os.path.join(image_dir, image_id)
+            clip_scores = compute_clip_scores(img_path, pred_boxes, texts)
+            clip_results[image_id] = clip_scores
+
+    print("IoU Results per image:")
+    for img, vals in iou_results.items():
+        print(f"{img}: {vals}")
+
+    print("\nCLIP Scores per image:")
+    for img, vals in clip_results.items():
+        print(f"{img}: {vals}")
+
+
+if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser(description="Evaluate IoU and CLIP scores.")
+    parser.add_argument('--gt', required=True, help='Path to ground-truth JSONL file')
+    parser.add_argument('--pred', required=True, help='Path to prediction JSONL file')
+    parser.add_argument('--images', required=True, help='Directory containing images')
+    args = parser.parse_args()
+    main(args.gt, args.pred, args.images)
