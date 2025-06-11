@@ -58,11 +58,9 @@ if __name__ == "__main__":
         base = Path.cwd()
         input_csv = base / "benchmark" / "data" / "benchmark_prompts.csv"
         image_dir = base / "benchmark" / "data" / "images"
-        output_dir = base / "test" / "results" / "benchmark"
+        output_dir = base / "test" / "benchmark"
         run_test(input_csv, image_dir, output_dir, test_flag=True)
     else:
         if not args.input_csv or not args.image_dir:
             raise ValueError("For non-benchmark mode, provide --input_csv and --image_dir.")
         run_test(Path(args.input_csv), Path(args.image_dir), Path(args.output_dir), test_flag=False)
-
-    print('test completed.')
