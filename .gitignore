@@ -8,8 +8,6 @@ groundingdino/weights
 ext.py
 iter.py
 test/results
-groundingdino/models
-groundingdino/config
 
 
 
