@@ -71,20 +71,12 @@ def plot_boxes_to_image(image_pil, tgt):
     return image_pil, mask ,final_boxes
 
 
-def load_image_square(image_path):
+def load_image(image_path):
     # load image
     image_pil = Image.open(image_path).convert("RGB")  # load image
     
-    w, h= image_pil.size
-    if h < w:
-        offset = (w - h) // 2
-        image_pil = image_pil.crop((offset, 0, offset + h, h))
-    elif w < h:
-        offset = (h - w) // 2
-        image_pil = image_pil.crop((0, offset, w, offset + w))
     transform = T.Compose(
         [
-            T.RandomResize([800], max_size=1333),
             T.ToTensor(),
             T.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
         ]
@@ -252,7 +244,7 @@ def main_run(config_file, checkpoint_path, image_path, text_prompt, output_dir, 
     # make dir
     os.makedirs(output_dir, exist_ok=True)
     # load image
-    image_pil, image = load_image_square(image_path)
+    image_pil, image = load_image(image_path)
     # load model
     model = load_model(config_file, checkpoint_path, cpu_only=cpu_only)
 
