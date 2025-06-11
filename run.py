@@ -119,7 +119,7 @@ def origin(image_path, responses, output_dir = None, test = False):
       preserve_form = eval(preserve_form)
 
       beta = [0.5,0.4,0.3,0.2,0.1]
-      output_dir = "output"
+      output_dir = output_dir
       attempt_count =1000
       bbox = main(source_sentence, target_sentence,image_path,num_iters = 500,beta = beta, output_dir=output_dir,cutloss_flag = preserve_form, test_flag=test)
 

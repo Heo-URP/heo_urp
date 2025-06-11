@@ -2,6 +2,7 @@ import json
 import os
 from PIL import Image
 import torch
+from pathlib import Path
 import clip
 
 
@@ -84,7 +85,7 @@ def main(gt_path, pred_path, image_dir):
     JSONL format per line:
       {"image_id": "image1.jpg", "boxes": [[x1,y1,x2,y2], ...], "texts": ["label1", ...]}
     Predictions file format:
-      {"image_id": "image1.jpg", "boxes": [[x1,y1,x2,y2], ...]}
+      {"image_id": "image1", "boxes": [[x1,y1,x2,y2], ...]}
     """
     iou_results = {}
     clip_results = {}
@@ -93,7 +94,7 @@ def main(gt_path, pred_path, image_dir):
         for gt_line, pred_line in zip(f_gt, f_pred):
             gt = json.loads(gt_line)
             pred = json.loads(pred_line)
-            image_id = gt['image_id']
+            image_id = Path(gt['image_id']).stem
             gt_boxes = gt['boxes']
             pred_boxes = pred['boxes']
             texts = gt.get('texts', [])
@@ -103,7 +104,7 @@ def main(gt_path, pred_path, image_dir):
             iou_results[image_id] = ious
 
             # CLIP
-            img_path = os.path.join(image_dir, image_id)
+            img_path = os.path.join(image_dir, image_id+'.jpg')
             clip_scores = compute_clip_scores(img_path, pred_boxes, texts)
             clip_results[image_id] = clip_scores
 

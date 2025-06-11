@@ -38,7 +38,13 @@ def run_test(input_csv, image_dir, output_dir, test_flag=False, use_org=False):
             image_id = Path(file_name).stem
 
             if use_org:
-                predicted_boxes = origin(image_path, responses, output_dir=output_dir, test=test_flag)
+                boxes = origin(image_path, responses, output_dir=output_dir, test=test_flag)
+                # predicted_boxes 안에 Path 객체가 들어있다면 str()로 변환
+                clean_boxes = []
+                for b in boxes:
+                    # b가 Path 객체이면 str(b), 아니면 그대로
+                    clean_boxes.append(str(b) if isinstance(b, Path) else b)
+                predicted_boxes = clean_boxes
             else:
                 predicted_boxes = full_pipe(image_path, responses, output_dir=output_dir, test=test_flag)
 
@@ -47,7 +53,7 @@ def run_test(input_csv, image_dir, output_dir, test_flag=False, use_org=False):
                     "image_id": image_id,
                     "predicted_boxes": predicted_boxes
                 }
-                jsonl_file.write(json.dumps(result) + "\n")
+                jsonl_file.write(json.dumps(result, default=str) + "\n")
 
     if jsonl_file:
         jsonl_file.close()
