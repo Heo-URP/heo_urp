@@ -57,10 +57,16 @@ reflection visible, with a snowy mountain in the background."].
 preserve_form: [1, 0, 0]
 Question: Apply the rules explained above. Please refer to the picture and request below.
 How should the source_list, target_list, and preserve_form arrays be structured?
+Also, extract and output only the object names that are requested to be changed, in order, 
+as a separate array called objects_list. 
+Each element should be the main noun in the phrase (e.g., "leftmost giraffe" → "giraffe").
 request:{responses}
 Answer in the form of
 Explanation: ...
-Final answer: ...
-as in the examples above.
+Final answer: 
+source_list: [...]
+target_list: [...]
+preserve_form: [...]
+objects_list: [...]
 
 

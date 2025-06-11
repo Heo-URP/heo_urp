@@ -1,5 +1,6 @@
 import argparse
 from main import full_pipe
+from run import origin
 from pathlib import Path
 import os
 import csv
@@ -9,7 +10,11 @@ import json
 
 
 
-def run_test(input_csv, image_dir, output_dir, test_flag=False):
+def run_test(input_csv, image_dir, output_dir, test_flag=False, use_org=False):
+
+    if use_org:
+        output_dir = output_dir / "origin_run"
+        output_dir.mkdir(parents=True, exist_ok=True)
 
     if test_flag:
         output_dir.mkdir(parents=True, exist_ok=True)
@@ -32,7 +37,10 @@ def run_test(input_csv, image_dir, output_dir, test_flag=False):
             responses = row["transform"]
             image_id = Path(file_name).stem
 
-            predicted_boxes = full_pipe(image_path, responses, output_dir=output_dir, test=test_flag)
+            if use_org:
+                predicted_boxes = origin(image_path, responses, output_dir=output_dir, test=test_flag)
+            else:
+                predicted_boxes = full_pipe(image_path, responses, output_dir=output_dir, test=test_flag)
 
             if test_flag and predicted_boxes:
                 result = {
@@ -49,18 +57,20 @@ def run_test(input_csv, image_dir, output_dir, test_flag=False):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--benchmark", action="store_true", help="Run on benchmark dataset")
+    parser.add_argument("--origin", action="store_true", help="Run origin (Ground-A-Score) pipeline")
     parser.add_argument("--input_csv", type=str, help="Path to CSV file")
     parser.add_argument("--image_dir", type=str, help="Path to image directory")
     parser.add_argument("--output_dir", type=str, default="test/results", help="Base output directory")
     args = parser.parse_args()
+    use_org = args.origin
 
     if args.benchmark:
         base = Path.cwd()
         input_csv = base / "benchmark" / "data" / "benchmark_prompts.csv"
         image_dir = base / "benchmark" / "data" / "images"
         output_dir = base / "test" / "benchmark"
-        run_test(input_csv, image_dir, output_dir, test_flag=True)
+        run_test(input_csv, image_dir, output_dir, test_flag=True, use_org = use_org)
     else:
         if not args.input_csv or not args.image_dir:
             raise ValueError("For non-benchmark mode, provide --input_csv and --image_dir.")
-        run_test(Path(args.input_csv), Path(args.image_dir), Path(args.output_dir), test_flag=False)
+        run_test(Path(args.input_csv), Path(args.image_dir), Path(args.output_dir), test_flag=False, use_org = use_org)

@@ -74,7 +74,7 @@ def full_pipe(image_path, responses, output_dir = None, test = False):
           "Content-Type": "application/json",
           "Authorization": f"Bearer {api_key}"
         }
-        with open('groundascore/LLM_template/template2.txt', 'r') as file:
+        with open('groundascore/LLM_template/template3.txt', 'r') as file:
             template = file.read()
             template3 = template.format(responses=change)
         payload = {
