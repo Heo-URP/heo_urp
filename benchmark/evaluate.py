@@ -17,6 +17,22 @@ _clip_std  = (0.26862954, 0.26130258, 0.27577711)
 _clip_size = (224, 224)
 
 
+def convert_xywh_to_xyxy(boxes, size):
+    """
+    Convert normalized or absolute xywh boxes to absolute xyxy.
+    boxes: list of [cx, cy, w, h] normalized in [0,1]
+    size: (width, height)
+    """
+    W, H = size
+    abs_boxes = []
+    for cx, cy, w, h in boxes:
+        x0 = (cx - w/2) * W
+        y0 = (cy - h/2) * H
+        x1 = (cx + w/2) * W
+        y1 = (cy + h/2) * H
+        abs_boxes.append([x0, y0, x1, y1])
+    return abs_boxes
+
 def compute_clip_scores(image_path, pred_boxes, texts):
     """
     Crop regions, resize to 224x224, normalize, and compute CLIP cosine scores.
@@ -24,6 +40,10 @@ def compute_clip_scores(image_path, pred_boxes, texts):
     model.eval()
 
     img = Image.open(image_path).convert("RGB")
+    size = img.size
+
+    # if max(max(pred_boxes)) <= 1.0: 
+    pred_boxes = convert_xywh_to_xyxy(pred_boxes, size)
 
     # prepare transforms
     to_tensor = transforms.ToTensor()
@@ -31,6 +51,7 @@ def compute_clip_scores(image_path, pred_boxes, texts):
 
     scores = []
     for box, text in zip(pred_boxes, texts):
+
         x0, y0, x1, y1 = map(float, box)
         # round/clip coordinates
         left   = int(max(0, x0))
@@ -112,6 +133,7 @@ def main(gt_path, pred_path, image_dir, output_path):
     Output jsonl format:
     {"image1.jpg": {"ious": [0.82, 0.76], "clip_scores": [0.45, 0.38]}, ...}
     """
+
     iou_results = {}
     clip_results = {}
 
