@@ -4,6 +4,7 @@ import base64
 import requests
 from openai import OpenAI
 import os
+import traceback
 
 import numpy as np
 from PIL import Image
@@ -128,8 +129,9 @@ def origin(image_path, responses, output_dir = None, test = False):
       
 
     except Exception as e:
-          error_msg = f"Error: {str(e)}\n"
-          print(error_msg)
+          traceback.print_exc()
+          # error_msg = f"Error: {str(e)}\n"
+          # print(error_msg)
           
           # Log the error message to error.txt
           #with open('error.txt', 'a') as error_file:
