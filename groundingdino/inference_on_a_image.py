@@ -245,11 +245,12 @@ def main_run(config_file, checkpoint_path, image_path, text_prompt, output_dir, 
     os.makedirs(output_dir, exist_ok=True)
     # load image
     image_pil, image = load_image(image_path)
+    image_name = Path(image_path).stem
     # load model
     model = load_model(config_file, checkpoint_path, cpu_only=cpu_only)
 
     # visualize raw image
-    image_pil.save(os.path.join(output_dir, "raw_image.jpg"))
+    image_pil.save(os.path.join(output_dir, f"{image_name}_raw_image.jpg"))
 
     # set the text_threshold to None if token_spans is set.
     if token_spans is not None:
@@ -270,7 +271,7 @@ def main_run(config_file, checkpoint_path, image_path, text_prompt, output_dir, 
     }
     # import ipdb; ipdb.set_trace()
     image_with_box  , _ , final_boxes= plot_boxes_to_image(image_pil, pred_dict)
-    image_with_box.save(os.path.join(output_dir, "pred.jpg"))
+    image_with_box.save(os.path.join(output_dir, f"{image_name}_pred.jpg"))
     del model
     del image
     del boxes_filt
