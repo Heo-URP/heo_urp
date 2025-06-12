@@ -40,10 +40,6 @@ def compute_clip_scores(image_path, pred_boxes, texts):
     model.eval()
 
     img = Image.open(image_path).convert("RGB")
-    size = img.size
-
-    # if max(max(pred_boxes)) <= 1.0: 
-    pred_boxes = convert_xywh_to_xyxy(pred_boxes, size)
 
     # prepare transforms
     to_tensor = transforms.ToTensor()
@@ -119,8 +115,6 @@ def compute_iou_per_image(gt_boxes, pred_boxes):
     return [compute_iou(gt, pred) for gt, pred in zip(gt_boxes, pred_boxes)]
 
 
-
-
 def main(gt_path, pred_path, image_dir, output_path):
     """
     Load ground-truth and prediction JSONL files, compute IoU and CLIP scores per image,
@@ -142,8 +136,12 @@ def main(gt_path, pred_path, image_dir, output_path):
             gt = json.loads(gt_line)
             pred = json.loads(pred_line)
             image_id = gt['image_file']
+            image_path = os.path.join(image_dir, image_id+'.jpg')
+            image = Image.open(image_path).convert('RGB')
+            size = image.size
             gt_boxes = gt['ground_truth_boxes']
             pred_boxes = pred['predicted_boxes']
+            pred_boxes = convert_xywh_to_xyxy(pred_boxes, size)
             texts = gt.get('texts', [])
 
             while len(gt_boxes) > len(pred_boxes):
