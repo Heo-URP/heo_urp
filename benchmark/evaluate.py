@@ -3,51 +3,63 @@ import os
 from PIL import Image
 import torch
 from pathlib import Path
+from torchvision import transforms
 # import clip
 
-from transformers import CLIPProcessor, CLIPModel
-device = "cuda" if torch.cuda.is_available() else "cpu"
-processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
-model     = CLIPModel.from_pretrained("openai/clip-vit-base-patch32").to(device)
 
+from transformers import CLIPModel, CLIPTokenizer
+device = "cuda" if torch.cuda.is_available() else "cpu"
+tokenizer = CLIPTokenizer.from_pretrained("openai/clip-vit-base-patch32")
+model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32").to(device)
+
+_clip_mean = (0.48145466, 0.4578275, 0.40821073)
+_clip_std  = (0.26862954, 0.26130258, 0.27577711)
+_clip_size = (224, 224)
 
 
 def compute_clip_scores(image_path, pred_boxes, texts):
     """
-    Given an image path, list of predicted boxes, and corresponding texts,
-    compute CLIP cosine similarity scores for each cropped region vs text.
-    Returns a list of floats.
+    Crop regions, resize to 224x224, normalize, and compute CLIP cosine scores.
     """
-    if device is None:
-        device = "cuda" if torch.cuda.is_available() else "cpu"
-
-    # Ensure model in eval mode
     model.eval()
 
-    # Load image and prepare crops
-    image = Image.open(image_path).convert("RGB")
-    crops = [image.crop(box) for box in pred_boxes]
+    img = Image.open(image_path).convert("RGB")
 
-    # Preprocess crops
-    pixel_values = torch.cat([
-        processor(images=crop, return_tensors="pt")["pixel_values"] for crop in crops
-    ], dim=0).to(device)
+    # prepare transforms
+    to_tensor = transforms.ToTensor()
+    normalize = transforms.Normalize(_clip_mean, _clip_std)
 
-    # Tokenize texts (assume len(texts) == len(pred_boxes))
-    text_inputs = processor(text=texts, padding=True, return_tensors="pt").to(device)
+    scores = []
+    for box, text in zip(pred_boxes, texts):
+        x0, y0, x1, y1 = map(float, box)
+        # round/clip coordinates
+        left   = int(max(0, x0))
+        top    = int(max(0, y0))
+        right  = int(min(img.width,  x1))
+        bottom = int(min(img.height, y1))
+        if right <= left or bottom <= top:
+            scores.append(0.0)
+            continue
+        # crop and resize
+        crop = img.crop((left, top, right, bottom)).resize(_clip_size, Image.BICUBIC)
+        # tensor and normalize
+        t = normalize(to_tensor(crop)).unsqueeze(0).to(device)
+        # text preprocessing per region
+        # lazy import to avoid overhead if not used
+        # tokenize text
+        inputs = tokenizer(texts=[text], return_tensors="pt", padding=True).to(device)
+        # encode
+        with torch.no_grad():
+            img_feat  = model.get_image_features(pixel_values=t)
+            txt_feat  = model.get_text_features(**inputs)
+        # normalize and cosine
+        img_feat = img_feat / img_feat.norm(dim=-1, keepdim=True)
+        txt_feat = txt_feat / txt_feat.norm(dim=-1, keepdim=True)
+        score = (img_feat * txt_feat).sum().item()
+        scores.append(score)
+    return scores
 
-    # Encode features
-    with torch.no_grad():
-        image_features = model.get_image_features(pixel_values=pixel_values)
-        text_features = model.get_text_features(**text_inputs)
 
-    # Normalize
-    image_features = image_features / image_features.norm(dim=-1, keepdim=True)
-    text_features = text_features / text_features.norm(dim=-1, keepdim=True)
-
-    # Compute cosine similarities (one-to-one by index)
-    scores = (image_features * text_features).sum(dim=-1)
-    return scores.cpu().tolist()
 
 
 def compute_iou(boxA, boxB):
@@ -112,6 +124,12 @@ def main(gt_path, pred_path, image_dir, output_path):
             pred_boxes = pred['predicted_boxes']
             texts = gt.get('texts', [])
 
+            while len(gt_boxes) > len(pred_boxes):
+              pred_boxes.append([0.,0.,0.,0.])
+              
+            assert len(gt_boxes) == len(pred_boxes), \
+        f"image id {image_id} GT and prediction must have same number of boxes"
+
             # IoU
             ious = compute_iou_per_image(gt_boxes, pred_boxes)
             iou_results[image_id] = ious
@@ -148,9 +166,9 @@ def main(gt_path, pred_path, image_dir, output_path):
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser(description="Evaluate IoU and CLIP scores.")
-    parser.add_argument('--gt', default='/data/GTBOX.jsonl', help='Path to ground-truth JSONL file')
+    parser.add_argument('--gt', default='./data/GTBOX.jsonl', help='Path to ground-truth JSONL file')
     parser.add_argument('--pred', required=True, help='Path to prediction JSONL file')
-    parser.add_argument('--images', default='/data/images', help='Directory containing images')
+    parser.add_argument('--images', default='./data/images', help='Directory containing images')
     parser.add_argument('--output', required=True, help='Path to output dir')
     args = parser.parse_args()
     main(args.gt, args.pred, args.images, args.output)
