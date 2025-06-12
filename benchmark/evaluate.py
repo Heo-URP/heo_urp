@@ -3,9 +3,51 @@ import os
 from PIL import Image
 import torch
 from pathlib import Path
-import clip
+# import clip
+
+from transformers import CLIPProcessor, CLIPModel
+device = "cuda" if torch.cuda.is_available() else "cpu"
+processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
+model     = CLIPModel.from_pretrained("openai/clip-vit-base-patch32").to(device)
 
 
+
+def compute_clip_scores(image_path, pred_boxes, texts):
+    """
+    Given an image path, list of predicted boxes, and corresponding texts,
+    compute CLIP cosine similarity scores for each cropped region vs text.
+    Returns a list of floats.
+    """
+    if device is None:
+        device = "cuda" if torch.cuda.is_available() else "cpu"
+
+    # Ensure model in eval mode
+    model.eval()
+
+    # Load image and prepare crops
+    image = Image.open(image_path).convert("RGB")
+    crops = [image.crop(box) for box in pred_boxes]
+
+    # Preprocess crops
+    pixel_values = torch.cat([
+        processor(images=crop, return_tensors="pt")["pixel_values"] for crop in crops
+    ], dim=0).to(device)
+
+    # Tokenize texts (assume len(texts) == len(pred_boxes))
+    text_inputs = processor(text=texts, padding=True, return_tensors="pt").to(device)
+
+    # Encode features
+    with torch.no_grad():
+        image_features = model.get_image_features(pixel_values=pixel_values)
+        text_features = model.get_text_features(**text_inputs)
+
+    # Normalize
+    image_features = image_features / image_features.norm(dim=-1, keepdim=True)
+    text_features = text_features / text_features.norm(dim=-1, keepdim=True)
+
+    # Compute cosine similarities (one-to-one by index)
+    scores = (image_features * text_features).sum(dim=-1)
+    return scores.cpu().tolist()
 
 
 def compute_iou(boxA, boxB):
@@ -43,44 +85,6 @@ def compute_iou_per_image(gt_boxes, pred_boxes):
         "GT and prediction must have same number of boxes"
     return [compute_iou(gt, pred) for gt, pred in zip(gt_boxes, pred_boxes)]
 
-
-def compute_clip_scores(image_path, pred_boxes, texts, model_name="ViT-B/32", device=None):
-    """
-    Given an image path, list of predicted boxes, and corresponding texts,
-    compute CLIP cosine similarity scores for each cropped region vs text.
-    Returns a list of floats.
-    """
-    if device is None:
-        device = "cuda" if torch.cuda.is_available() else "cpu"
-    # Load CLIP model
-    model, preprocess = clip.load(model_name, device=device)
-    model.eval()
-
-    # Open image
-    image = Image.open(image_path).convert("RGB")
-
-    # Preprocess each crop
-    crops = []
-    for box in pred_boxes:
-        crop = image.crop(box)
-        crops.append(preprocess(crop).unsqueeze(0))
-    image_input = torch.cat(crops, dim=0).to(device)
-
-    # Tokenize texts
-    text_input = clip.tokenize(texts).to(device)
-
-    # Encode features
-    with torch.no_grad():
-        image_features = model.encode_image(image_input)
-        text_features = model.encode_text(text_input)
-
-    # Normalize
-    image_features /= image_features.norm(dim=-1, keepdim=True)
-    text_features /= text_features.norm(dim=-1, keepdim=True)
-
-    # Compute cosine similarities
-    scores = (image_features * text_features).sum(dim=-1)
-    return scores.cpu().tolist()
 
 
 
