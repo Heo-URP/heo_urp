@@ -6,11 +6,16 @@ from pathlib import Path
 import clip
 
 
+
+
 def compute_iou(boxA, boxB):
     """
     Compute Intersection over Union (IoU) of two bounding boxes.
     Boxes are in [x_min, y_min, x_max, y_max] format.
     """
+    boxA = [float(x) for x in boxA]
+    boxB = [float(x) for x in boxB]
+
     xA = max(boxA[0], boxB[0])
     yA = max(boxA[1], boxB[1])
     xB = min(boxA[2], boxB[2])
@@ -78,14 +83,18 @@ def compute_clip_scores(image_path, pred_boxes, texts, model_name="ViT-B/32", de
     return scores.cpu().tolist()
 
 
-def main(gt_path, pred_path, image_dir):
+
+def main(gt_path, pred_path, image_dir, output_path):
     """
     Load ground-truth and prediction JSONL files, compute IoU and CLIP scores per image,
     and print results.
     JSONL format per line:
-      {"image_id": "image1.jpg", "boxes": [[x1,y1,x2,y2], ...], "texts": ["label1", ...]}
+      {"image_id": "image1", "boxes": [[x1,y1,x2,y2], ...], "texts": ["label1", ...]}
     Predictions file format:
       {"image_id": "image1", "boxes": [[x1,y1,x2,y2], ...]}
+
+    Output jsonl format:
+    {"image1.jpg": {"ious": [0.82, 0.76], "clip_scores": [0.45, 0.38]}, ...}
     """
     iou_results = {}
     clip_results = {}
@@ -94,9 +103,9 @@ def main(gt_path, pred_path, image_dir):
         for gt_line, pred_line in zip(f_gt, f_pred):
             gt = json.loads(gt_line)
             pred = json.loads(pred_line)
-            image_id = Path(gt['image_id']).stem
-            gt_boxes = gt['boxes']
-            pred_boxes = pred['boxes']
+            image_id = gt['image_file']
+            gt_boxes = gt['ground_truth_boxes']
+            pred_boxes = pred['predicted_boxes']
             texts = gt.get('texts', [])
 
             # IoU
@@ -107,21 +116,37 @@ def main(gt_path, pred_path, image_dir):
             img_path = os.path.join(image_dir, image_id+'.jpg')
             clip_scores = compute_clip_scores(img_path, pred_boxes, texts)
             clip_results[image_id] = clip_scores
+    
+    results = {}
+    for image_id in iou_results:
+        results[image_id] = {
+            "ious": iou_results[image_id],
+            "clip_scores": clip_results.get(image_id, [])
+        }
 
-    print("IoU Results per image:")
-    for img, vals in iou_results.items():
-        print(f"{img}: {vals}")
+    # save to JSON file
+    os.makedirs(Path(output_path).parent, exist_ok=True)
+    with open(output_path, 'w', encoding='utf-8') as f:
+        json.dump(results, f, ensure_ascii=False, indent=2)
 
-    print("\nCLIP Scores per image:")
-    for img, vals in clip_results.items():
-        print(f"{img}: {vals}")
+    # print("IoU Results per image:")
+    # for img, vals in iou_results.items():
+    #     print(f"{img}: {vals}")
+
+    # print("\nCLIP Scores per image:")
+    # for img, vals in clip_results.items():
+    #     print(f"{img}: {vals}")
 
 
+
+
+### run directory : heo_urp/benchmark
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser(description="Evaluate IoU and CLIP scores.")
-    parser.add_argument('--gt', required=True, help='Path to ground-truth JSONL file')
+    parser.add_argument('--gt', default='/data/GTBOX.jsonl', help='Path to ground-truth JSONL file')
     parser.add_argument('--pred', required=True, help='Path to prediction JSONL file')
-    parser.add_argument('--images', required=True, help='Directory containing images')
+    parser.add_argument('--images', default='/data/images', help='Directory containing images')
+    parser.add_argument('--output', required=True, help='Path to output dir')
     args = parser.parse_args()
-    main(args.gt, args.pred, args.images)
+    main(args.gt, args.pred, args.images, args.output)
