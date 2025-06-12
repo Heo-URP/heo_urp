@@ -68,7 +68,7 @@ def compute_clip_scores(image_path, pred_boxes, texts):
         # text preprocessing per region
         # lazy import to avoid overhead if not used
         # tokenize text
-        inputs = tokenizer(texts=[text], return_tensors="pt", padding=True).to(device)
+        inputs = tokenizer(text=[text], return_tensors="pt", padding=True).to(device)
         # encode
         with torch.no_grad():
             img_feat  = model.get_image_features(pixel_values=t)
