@@ -193,7 +193,10 @@ def get_grounding_box(source_sentence, image_path, output_dir, objects, box_thre
 
     # given-phrase mode
     positive_maps = create_positive_map_from_span(
-        processor.tokenizer(text),
+        processor.tokenizer(
+        text,
+        return_offsets_mapping=True,
+        ),
         token_span=token_spans
     ).to(device) # n_phrase, 256
 
